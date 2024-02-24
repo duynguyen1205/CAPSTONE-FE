@@ -1,0 +1,15 @@
+.staff-header {
+  border-bottom: 1px solid #ebebeb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 15px;
+  .staff-p {
+    color: #303972;
+    font-size: large;
+    font-weight: bold;
+  }
+}
+.staff-href {
+  color: black;
+}
