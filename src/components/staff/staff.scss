@@ -1,13 +1,8 @@
 .staff-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 0px 15px;
-  .staff-p {
-    color: #303972;
-    font-size: large;
-    font-weight: bold;
-  }
 }
 .staff-href {
   color: black;
@@ -19,7 +14,8 @@
 .layout-staff {
   height: 100vh;
   width: 100vw;
-}
-.layout-content {
-  overflow: auto;
+  .layout-content {
+    overflow-x: hidden;
+    margin: 5px 16px;
+  }
 }
