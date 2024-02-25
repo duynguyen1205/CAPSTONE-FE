@@ -4,7 +4,16 @@ import {
   ExceptionOutlined,
   DollarCircleOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Dropdown, Space, message, Avatar, theme } from "antd";
+import {
+  Layout,
+  Menu,
+  Dropdown,
+  Space,
+  message,
+  Avatar,
+  theme,
+  ConfigProvider,
+} from "antd";
 import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./staff.scss";
@@ -22,12 +31,12 @@ const items = [
     icon: <UserOutlined />,
   },
   {
-    label: <Link to="/staff/book">Tải tài liệu lên  </Link>,
+    label: <Link to="/staff">Tải tài liệu lên </Link>,
     key: "upload",
     icon: <ExceptionOutlined />,
   },
   {
-    label: <Link to="/staff/order">Hồ sơ cá nhân</Link>,
+    label: <Link to="/staff">Hồ sơ cá nhân</Link>,
     key: "profile",
     icon: <DollarCircleOutlined />,
   },
@@ -38,6 +47,7 @@ const LayoutStaff = () => {
     token: { colorBgContainer },
   } = theme.useToken();
   const [activeMenu, setActiveMenu] = useState("dashboard");
+  const [screen, setCurrentScreen] = useState("");
   const navigate = useNavigate();
   const handleLogout = async () => {
     message.success("Logged out successfully");
@@ -62,30 +72,37 @@ const LayoutStaff = () => {
       key: "logout",
     },
   ];
+  
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-      className="layout-staff"
-    >
-      <Sider theme="light">
-        <div style={{ margin: 16, textAlign: "center" }}>
-          {" "}
-          <img
-            style={{ height: 100, width: 130 }}
-            src={logo}
-            alt="logo bệnh viện"
+    <Layout className="layout-staff">
+      <ConfigProvider
+        theme={{
+          components: {
+            Menu: {
+             colorBgContainer:"#42BC81",
+             colorText: "#FFFFFF",
+             colorPrimary: "#070707",
+            },
+          },
+        }}
+      >
+        <Sider>
+          <div style={{ margin: 16, textAlign: "center" }}>
+            {" "}
+            <img
+              style={{ height: 100, width: 130 }}
+              src={logo}
+              alt="logo bệnh viện"
+            />
+          </div>
+          <Menu
+            defaultSelectedKeys={[activeMenu]}
+            mode="inline"
+            items={items}
+            onClick={(e) => setActiveMenu(e.key)}
           />
-        </div>
-        <Menu
-          defaultSelectedKeys={[activeMenu]}
-          mode="inline"
-          items={items}
-          onClick={(e) => setActiveMenu(e.key)}
-        />
-      </Sider>
-
+        </Sider>
+      </ConfigProvider>
       <Layout className="site-layout">
         <Header
           style={{
@@ -94,7 +111,7 @@ const LayoutStaff = () => {
           }}
         >
           <div className="staff-header">
-            <div className="staff-p">Danh sách đề tài</div>
+            <div className="staff-p"> Danh sách đề tài</div>
             <Dropdown
               menu={{
                 items: itemDropdown,
@@ -110,11 +127,7 @@ const LayoutStaff = () => {
           </div>
         </Header>
 
-        <Content
-          style={{
-            margin: "0 16px",
-          }}
-        >
+        <Content className="layout-content">
           <Outlet />
         </Content>
       </Layout>

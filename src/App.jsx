@@ -1,9 +1,9 @@
-import { useState } from "react";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login/index.jsx";
 import NotFound from "./components/NotFound/index.jsx";
 import LayoutStaff from "./pages/staff/LayoutStaff.jsx";
-
+import "antd/dist/reset.css"
 const Layout = () => {
   return <>Main Page</>;
 };
