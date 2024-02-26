@@ -1,4 +1,9 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  InfoCircleOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -12,180 +17,13 @@ import {
 } from "antd";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import "./project.scss";
+import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
-const ProjectManager = () => {
-  //data để text
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "3",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "4",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "5",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "6",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "7",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "8",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "9",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-    {
-      key: "10",
-      name: "Duy",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
-    },
-  ];
-  const dataSource1 = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "3",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "4",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "5",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "6",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "7",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "8",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "9",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-    {
-      key: "10",
-      name: "Duy",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
-    },
-  ];
+const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [checkTab, setCheckTab] = useState("notyet");
-  const [data, setData] = useState(dataSource);
   const navigate = useNavigate();
   const items = [
     {
@@ -195,12 +33,7 @@ const ProjectManager = () => {
     },
     {
       key: "chohoidong",
-      label: `Chờ hội đồng`,
-      children: <></>,
-    },
-    {
-      key: "hoanthanh",
-      label: `Hoàn thành`,
+      label: `Đã duyệt`,
       children: <></>,
     },
   ];
@@ -293,7 +126,88 @@ const ProjectManager = () => {
         text
       ),
   });
-
+  const dataSource = [
+    {
+      key: "1",
+      name: "Mike",
+      age: 32,
+      address: "Nghiên cứu bệnh lý",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "2",
+      name: "John",
+      age: 42,
+      address: "Nghiên cứu bệnh lý",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "3",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "4",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "5",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "6",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "7",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "8",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "9",
+      name: "John",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+    {
+      key: "10",
+      name: "Duy",
+      age: 42,
+      address: "10 Downing Street",
+      date: "03-04-2024",
+      tags: ["Chưa được duyệt"],
+    },
+  ];
   const columns = [
     {
       title: "No.",
@@ -340,39 +254,31 @@ const ProjectManager = () => {
     {
       title: "Hành động",
       render: (text, record, index) => {
+        const style1 = {
+          color: "blue",
+          fontSize: "1.5em",
+          margin: "0 20",
+          cursor: "pointer",
+        };
+        const style2 = {
+          color: "green",
+          fontSize: "1.5em",
+          margin: "0 20",
+          cursor: "pointer",
+        };
+        const style3 = {
+          color: "red",
+          fontSize: "1.5em",
+          margin: "0 20",
+          cursor: "pointer",
+        };
         return (
-          <div style={{ textAlign: "center" }}>
-            <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: "#55E6A0",
-                },
-              }}
-            >
-              {" "}
-              {checkTab === "notyet" && (
-                <Button
-                  shape="round"
-                  type="primary"
-                  onClick={() => {
-                    navigate(`/staff/manager/add-member/${record.key}`);
-                  }}
-                >
-                  Tạo hội đồng xét duyệt
-                </Button>
-              )}
-              {checkTab === "chohoidong" && (
-                <Button
-                  shape="round"
-                  type="primary"
-                  onClick={() => {
-                    navigate(`/staff/manager/add-council/${record.key}`);
-                  }}
-                >
-                  Tạo Hội Đồng Đánh Giá
-                </Button>
-              )}
-            </ConfigProvider>
+          <div>
+            <Space size={"middle"}>
+              <InfoCircleOutlined style={style1} />
+              <CheckOutlined style={style2} />
+              <CloseOutlined style={style3} />
+            </Space>
           </div>
         );
       },
@@ -385,12 +291,7 @@ const ProjectManager = () => {
         defaultActiveKey="notyet"
         items={items}
         onChange={(value) => {
-          setCheckTab(value);
-          if (value === "notyet") {
-            setData(dataSource);
-          } else if (value === "chohoidong") {
-            setData(dataSource1);
-          }
+          setSortQuery(value);
         }}
         style={{ overflowX: "auto", marginLeft: "30px" }}
       />
@@ -426,9 +327,9 @@ const ProjectManager = () => {
       </h2>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={dataSource}
         onChange={onChange}
-        rowKey={"key"}
+        rowKey={"_id"}
         pagination={{
           current: current,
           pageSize: pageSize,
@@ -450,4 +351,4 @@ const ProjectManager = () => {
   );
 };
 
-export default ProjectManager;
+export default ProjectManagerUser;

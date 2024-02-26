@@ -1,11 +1,15 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login/index.jsx";
 import NotFound from "./components/NotFound/index.jsx";
 
 import "antd/dist/reset.css";
 import LayoutStaff from "./components/staff/LayoutStaff.jsx";
 import StaffPage from "./pages/staff/index.jsx";
-import Project from "./pages/projectManger/index.jsx";
+import Project from "./pages/projectMangerStaff/index.jsx";
+import AddMemberApprove from "./components/staff/project/AddMemberAprove.jsx";
+import UploadDoc from "./pages/uploads/index.jsx";
+import LayoutUser from "./components/user/LayoutUser.jsx";
+import ProjectUser from "./pages/projectMangerUser/index.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -30,19 +34,63 @@ function App() {
           element: <StaffPage />,
         },
         {
-          path:"manager",
-          element: <Project/>
+          path: "manager",
+          element: <Outlet />,
+          children: [
+            {
+              index: true,
+              element: <Project />,
+            },
+            {
+              path: "add-member/:projectId",
+              element: <AddMemberApprove />,
+            },
+            {
+              path: "add-council/:projectId",
+              element: <AddMemberApprove/>
+            }
+          ],
         },
         {
-          path:"upload-document",
-          element: <>Tải đề tài lên</>
+          path: "upload-document",
+          element: <UploadDoc />,
         },
         {
-          path:"infor",
-          element: <>Thông tin cá nhân</>
-        }
+          path: "profile",
+          element: <>Thông tin cá nhân</>,
+        },
       ],
     },
+    {
+      path: "/user",
+      element: <LayoutUser />,
+      errorElement: <NotFound />,
+      children: [
+        {
+          index: true,
+          element: <StaffPage />,
+        },
+        {
+          path: "manager",
+          element: <Outlet />,
+          children: [
+            {
+              index: true,
+              element: <ProjectUser/>,
+            },
+          ],
+        },
+        {
+          path: "upload-document",
+          element: <>Tải tài liệu</>,
+        },
+        {
+          path: "profile",
+          element: <>Thông tin cá nhân</>,
+        },
+      ],
+    },
+    
   ]);
   return (
     <>

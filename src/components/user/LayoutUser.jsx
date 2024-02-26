@@ -11,33 +11,33 @@ import {
 } from "antd";
 import React, { useState } from "react";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
-import "./staff.scss";
+import "./user.scss";
 import logo from "../../assets/logoBV.png";
 const { Header, Content, Sider } = Layout;
 const items = [
   {
-    label: <Link to="/staff">Bảng điều khiển</Link>,
+    label: <Link to="/user">Bảng điều khiển</Link>,
     key: "dashboard",
     icon: <HomeOutlined />,
   },
   {
-    label: <Link to="/staff/manager">Quản lý</Link>,
+    label: <Link to="/user/manager">Quản lý</Link>,
     key: "manager",
     icon: <UnorderedListOutlined />,
   },
   {
-    label: <Link to="/staff/upload-document">Tải tài liệu lên </Link>,
+    label: <Link to="/user/upload-document">Tải tài liệu lên </Link>,
     key: "upload-document",
     icon: <UploadOutlined />,
   },
   {
-    label: <Link to="/staff/profile">Hồ sơ cá nhân</Link>,
+    label: <Link to="/user/profile">Hồ sơ cá nhân</Link>,
     key: "profile",
     icon: <UserOutlined />,
   },
 ];
 
-const LayoutStaff = () => {
+const LayoutUser = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -131,4 +131,4 @@ const LayoutStaff = () => {
     </Layout>
   );
 };
-export default LayoutStaff;
+export default LayoutUser;
