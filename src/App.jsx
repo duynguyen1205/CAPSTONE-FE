@@ -10,6 +10,7 @@ import AddMemberApprove from "./components/staff/project/AddMemberAprove.jsx";
 import UploadDoc from "./pages/uploads/index.jsx";
 import LayoutUser from "./components/user/LayoutUser.jsx";
 import ProjectUser from "./pages/projectMangerUser/index.jsx";
+import UserPage from "./pages/user/index.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -68,7 +69,7 @@ function App() {
       children: [
         {
           index: true,
-          element: <StaffPage />,
+          element: <UserPage />,
         },
         {
           path: "manager",

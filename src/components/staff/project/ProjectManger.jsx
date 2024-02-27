@@ -358,7 +358,7 @@ const ProjectManager = () => {
                     navigate(`/staff/manager/add-member/${record.key}`);
                   }}
                 >
-                  Tạo hội đồng xét duyệt
+                  Gửi sơ duyệt
                 </Button>
               )}
               {checkTab === "chohoidong" && (
@@ -369,7 +369,7 @@ const ProjectManager = () => {
                     navigate(`/staff/manager/add-council/${record.key}`);
                   }}
                 >
-                  Tạo Hội Đồng Đánh Giá
+                  Gửi hội đồng
                 </Button>
               )}
             </ConfigProvider>

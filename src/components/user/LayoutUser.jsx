@@ -1,4 +1,9 @@
-import { HomeOutlined, UnorderedListOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  UnorderedListOutlined,
+  UploadOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import {
   Layout,
   Menu,
@@ -68,7 +73,10 @@ const LayoutUser = () => {
   ];
   const location = useLocation();
   let path = location.pathname.split("/");
-  path = path[2]
+  path = path[2];
+  if (path === undefined) {
+    path = "dashboard";
+  }
   return (
     <Layout className="layout-staff">
       <ConfigProvider

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, ConfigProvider, Space, Table, message } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
+import ModalPickTime from "./ModalPickTime";
 const AddMemberApprove = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [user, setUser] = useState([]);
@@ -8,6 +9,7 @@ const AddMemberApprove = () => {
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // check path
   const location = useLocation();
   let path = location.pathname.split("/");
@@ -48,6 +50,7 @@ const AddMemberApprove = () => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
+  // xử lý hội đồng sơ duyệt
   const onSubmit = () => {
     const status = true;
     const users = [];
@@ -61,6 +64,18 @@ const AddMemberApprove = () => {
       message.success("Tạo thành viên hội đồng thành công");
       navigate("/staff/manager");
     }
+    console.log("check list user", user);
+  };
+  // xử lý hội đồng đánh giá
+  const onSubmitCouncil = () => {
+    const status = true;
+    const users = [];
+    data.forEach((items) => {
+      if (selectedRowKeys.includes(items.key)) {
+        users.push(items);
+      }
+      setUser(users);
+    });
     console.log("check list user", user);
   };
   const rowSelection = {
@@ -107,32 +122,27 @@ const AddMemberApprove = () => {
           {" "}
           {path === "add-council" && (
             <Button
-            disabled={hasSelected < 1}
-            shape="round"
-            type="primary"
-            onClick={() => onSubmit()}
+              disabled={hasSelected < 1}
+              shape="round"
+              type="primary"
+              onClick={() => {
+                onSubmitCouncil();
+                setIsModalOpen(true);
+              }}
             >
               Thêm thành viên đánh giá
             </Button>
           )}
           {path === "add-member" && (
             <Button
-            disabled={hasSelected < 1}
-            shape="round"
-            type="primary"
-            onClick={() => onSubmit()}
+              disabled={hasSelected < 1}
+              shape="round"
+              type="primary"
+              onClick={() => onSubmit()}
             >
               Thêm thành viên phê duyệt
             </Button>
           )}
-          {/* <Button
-            disabled={hasSelected < 1}
-            shape="round"
-            type="primary"
-            onClick={() => onSubmit()}
-          >
-            Thêm thành viên phê duyệt
-          </Button> */}
         </ConfigProvider>
       </Space>
     </div>
@@ -172,6 +182,12 @@ const AddMemberApprove = () => {
         }}
         loading={isLoading}
         footer={renderFooter}
+      />
+
+      {/* modal pickdate */}
+      <ModalPickTime
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
       />
     </div>
   );

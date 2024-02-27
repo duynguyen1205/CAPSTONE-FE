@@ -19,11 +19,15 @@ import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
+import ModalInfor from "./ModalInfor";
+// import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setDataUser] = useState({});
   const navigate = useNavigate();
   const items = [
     {
@@ -131,7 +135,7 @@ const ProjectManagerUser = () => {
       key: "1",
       name: "Mike",
       age: 32,
-      address: "Nghiên cứu bệnh lý",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -139,7 +143,7 @@ const ProjectManagerUser = () => {
       key: "2",
       name: "John",
       age: 42,
-      address: "Nghiên cứu bệnh lý",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -147,7 +151,7 @@ const ProjectManagerUser = () => {
       key: "3",
       name: "John",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -155,7 +159,7 @@ const ProjectManagerUser = () => {
       key: "4",
       name: "John",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -163,7 +167,7 @@ const ProjectManagerUser = () => {
       key: "5",
       name: "John",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -171,7 +175,7 @@ const ProjectManagerUser = () => {
       key: "6",
       name: "John",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -179,7 +183,7 @@ const ProjectManagerUser = () => {
       key: "7",
       name: "John",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -187,7 +191,7 @@ const ProjectManagerUser = () => {
       key: "8",
       name: "John",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -195,7 +199,7 @@ const ProjectManagerUser = () => {
       key: "9",
       name: "John",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -203,7 +207,7 @@ const ProjectManagerUser = () => {
       key: "10",
       name: "Duy",
       age: 42,
-      address: "10 Downing Street",
+      field: "10 Downing Street",
       date: "03-04-2024",
       tags: ["Chưa được duyệt"],
     },
@@ -243,8 +247,8 @@ const ProjectManagerUser = () => {
     },
     {
       title: "Lĩnh Vực",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "field",
+      key: "field",
     },
     {
       title: "Ngày",
@@ -275,7 +279,13 @@ const ProjectManagerUser = () => {
         return (
           <div>
             <Space size={"middle"}>
-              <InfoCircleOutlined style={style1} />
+              <InfoCircleOutlined
+                style={style1}
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setDataUser(record);
+                }}
+              />
               <CheckOutlined style={style2} />
               <CloseOutlined style={style3} />
             </Space>
@@ -346,6 +356,11 @@ const ProjectManagerUser = () => {
         }}
         title={renderHeader}
         loading={isLoading}
+      />
+      <ModalInfor
+        data={data}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
       />
     </div>
   );
