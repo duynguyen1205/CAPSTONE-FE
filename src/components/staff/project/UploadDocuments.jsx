@@ -303,12 +303,17 @@ const UploadDocument = () => {
     }
     console.log("parms: ", pagination, filters, sorter, extra);
   };
+  
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
         Danh sách đề tài
       </h2>
       <Table
+        rowClassName={(record, index) =>
+          index % 2 === 0 ? "table-row-light" : "table-row-dark"
+        }
+        bordered={true}
         columns={columns}
         dataSource={dataSource}
         onChange={onChange}

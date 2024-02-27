@@ -20,6 +20,7 @@ import Highlighter from "react-highlight-words";
 import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
 import ModalInfor from "./ModalInfor";
+import "./table.scss";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
@@ -336,6 +337,10 @@ const ProjectManagerUser = () => {
         Danh sách đề tài
       </h2>
       <Table
+        rowClassName={(record, index) =>
+          index % 2 === 0 ? "table-row-light" : "table-row-dark"
+        }
+        bordered={true}
         columns={columns}
         dataSource={dataSource}
         onChange={onChange}

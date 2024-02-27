@@ -425,6 +425,10 @@ const ProjectManager = () => {
         Danh sách đề tài
       </h2>
       <Table
+        rowClassName={(record, index) =>
+          index % 2 === 0 ? "table-row-light" : "table-row-dark"
+        }
+        bordered={true}
         columns={columns}
         dataSource={data}
         onChange={onChange}

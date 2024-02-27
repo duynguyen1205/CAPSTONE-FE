@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, ConfigProvider, Space, Table, message } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import ModalPickTime from "./ModalPickTime";
+import "../../user/project/table.scss";
 const AddMemberApprove = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [user, setUser] = useState([]);
@@ -14,18 +15,12 @@ const AddMemberApprove = () => {
   const location = useLocation();
   let path = location.pathname.split("/");
   path = path[3];
-  console.log("====================================");
-  console.log("check path: ", path);
-  console.log("====================================");
   const columns = [
     {
       title: "Tên",
       dataIndex: "name",
     },
-    {
-      title: "Điện thoại",
-      dataIndex: "phone",
-    },
+
     {
       title: "Chức vụ",
       dataIndex: "position",
@@ -33,6 +28,14 @@ const AddMemberApprove = () => {
     {
       title: "Khoa",
       dataIndex: "department",
+    },
+    {
+      title: "Điện thoại",
+      dataIndex: "phone",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
     },
   ];
   const navigate = useNavigate();
@@ -44,6 +47,7 @@ const AddMemberApprove = () => {
       phone: "09080878661",
       position: "Bác sĩ",
       department: "Khoa răng hàm mặt",
+      email: "duy56236@gmail.com",
     });
   }
   const onSelectChange = (newSelectedRowKeys) => {
@@ -162,6 +166,10 @@ const AddMemberApprove = () => {
         {hasSelected ? `Đã chọn ${selectedRowKeys.length} nhân viên` : ""}
       </span>
       <Table
+       rowClassName={(record, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-dark"
+      }
+        bordered={true}
         rowSelection={rowSelection}
         columns={columns}
         dataSource={data}
