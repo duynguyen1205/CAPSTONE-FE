@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Button, ConfigProvider, Space, Table, message } from "antd";
+import React, { useRef, useState } from "react";
+import { Button, ConfigProvider, Input, Space, Table, message } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import ModalPickTime from "./ModalPickTime";
+import Highlighter from "react-highlight-words";
 import "../../user/project/table.scss";
+import { SearchOutlined } from "@ant-design/icons";
 const AddMemberApprove = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [user, setUser] = useState([]);
@@ -11,14 +13,117 @@ const AddMemberApprove = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
   // check path
   const location = useLocation();
   let path = location.pathname.split("/");
   path = path[3];
+  // search in table
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: "block",
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1677ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
   const columns = [
     {
       title: "Tên",
       dataIndex: "name",
+      ...getColumnSearchProps("name"),
     },
 
     {
@@ -32,12 +137,14 @@ const AddMemberApprove = () => {
     {
       title: "Điện thoại",
       dataIndex: "phone",
+      ...getColumnSearchProps("phone"),
     },
     {
       title: "Email",
       dataIndex: "email",
     },
   ];
+
   const navigate = useNavigate();
   const data = [];
   for (let i = 0; i < 46; i++) {
@@ -166,9 +273,9 @@ const AddMemberApprove = () => {
         {hasSelected ? `Đã chọn ${selectedRowKeys.length} nhân viên` : ""}
       </span>
       <Table
-       rowClassName={(record, index) =>
-        index % 2 === 0 ? "table-row-light" : "table-row-dark"
-      }
+        rowClassName={(record, index) =>
+          index % 2 === 0 ? "table-row-light" : "table-row-dark"
+        }
         bordered={true}
         rowSelection={rowSelection}
         columns={columns}
