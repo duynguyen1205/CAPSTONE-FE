@@ -9,8 +9,6 @@ const ModalPickTime = (props) => {
   const isModalOpen = props.isModalOpen;
   const [form] = Form.useForm();
 
-  const data = props.data;
-  console.log("check data: ", data);
   const handleCancel = () => {
     props.setIsModalOpen(false);
   };

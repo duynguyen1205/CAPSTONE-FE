@@ -4,7 +4,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ModalPickTime from "./ModalPickTime";
 import Highlighter from "react-highlight-words";
 import "../../user/project/table.scss";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 const AddMemberApprove = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [user, setUser] = useState([]);
@@ -16,6 +20,7 @@ const AddMemberApprove = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [showFullData, setShowFullData] = useState({});
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -136,13 +141,50 @@ const AddMemberApprove = () => {
       dataIndex: "department",
     },
     {
-      title: "Điện thoại",
-      dataIndex: "phone",
-      ...getColumnSearchProps("phone"),
-    },
-    {
       title: "Email",
       dataIndex: "email",
+      key: "email",
+      render: (text, record) => (
+        <Space>
+          {showFullData[record.key] ? (
+            <p>{record.email}</p>
+          ) : (
+            <p>{maskEmail(record.email, false)}</p>
+          )}
+        </Space>
+      ),
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "phone",
+
+      render: (text, record) => (
+        <Space>
+          {showFullData[record.key] ? (
+            <p>{record.phone}</p>
+          ) : (
+            <p>{maskPhoneNumber(record.phone)}</p>
+          )}
+          
+        </Space>
+      ),
+    },
+    {
+      title: "",
+      key: "action",
+      render: (text, record) => (
+        <Button
+          icon={
+            showFullData[record.key] ? (
+              <EyeInvisibleOutlined />
+            ) : (
+              <EyeOutlined />
+            )
+          }
+          onClick={() => handleToggleShowFullData(record.key)}
+        />
+      ),
     },
   ];
 
@@ -188,6 +230,33 @@ const AddMemberApprove = () => {
       setUser(users);
     });
     console.log("check list user", user);
+  };
+  // hide email and phone munber
+  const maskEmail = (email) => {
+    const [username, domain] = email.split("@");
+    const maskedUsername = `${username.substring(0, 3)}****`;
+    return `${maskedUsername}@${domain}`;
+  };
+
+  const maskPhoneNumber = (phone) => {
+    return `${phone.substring(0, 3)}****${phone.substring(phone.length - 3)}`;
+  };
+
+  const maskData = (data, showFull) => {
+    return data.map((item) => ({
+      ...item,
+      email: maskEmail(item.email, showFull),
+      phone: maskPhoneNumber(item.phone, showFull),
+    }));
+  };
+
+  const maskedData = maskData(data, false);
+
+  const handleToggleShowFullData = (key) => {
+    setShowFullData((prevState) => ({
+      ...prevState,
+      [key]: !prevState[key],
+    }));
   };
   const rowSelection = {
     selectedRowKeys,
@@ -279,7 +348,7 @@ const AddMemberApprove = () => {
         bordered={true}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={data}
+        dataSource={showFullData ? data : maskedData}
         onChange={onChange}
         pagination={{
           current: current,
