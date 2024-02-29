@@ -124,6 +124,7 @@ const AddMemberApprove = () => {
       title: "Tên",
       dataIndex: "name",
       ...getColumnSearchProps("name"),
+      sorter: (a, b) => a.name.length - b.name.length,
     },
 
     {
@@ -179,7 +180,6 @@ const AddMemberApprove = () => {
   };
   // xử lý hội đồng đánh giá
   const onSubmitCouncil = () => {
-    const status = true;
     const users = [];
     data.forEach((items) => {
       if (selectedRowKeys.includes(items.key)) {
@@ -262,7 +262,7 @@ const AddMemberApprove = () => {
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
-        Danh sách nhân viên
+        Danh sách nhà khoa học
       </h2>
       <span
         style={{

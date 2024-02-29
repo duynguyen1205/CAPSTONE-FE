@@ -120,7 +120,7 @@ const UploadDocument = () => {
       age: 32,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "2",
@@ -128,7 +128,7 @@ const UploadDocument = () => {
       age: 42,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "3",
@@ -136,7 +136,7 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "4",
@@ -144,7 +144,7 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "5",
@@ -152,7 +152,7 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "6",
@@ -160,7 +160,7 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "7",
@@ -168,7 +168,7 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "8",
@@ -176,7 +176,7 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "9",
@@ -184,7 +184,7 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
     {
       key: "10",
@@ -192,41 +192,22 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
+      
     },
   ];
   const columns = [
     {
-      title: "No.",
-      key: "index",
-      render: (text, record, index) => index + 1,
-    },
-    {
       title: "Id",
       key: "index",
       render: (text, record, index) => index + 1,
-      backgroundColor: "green",
+      width: "10%"
     },
     {
       title: "Tên Đề Tài",
       dataIndex: "name",
       key: "name",
       ...getColumnSearchProps("name"),
-    },
-    {
-      title: "Trạng thái",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "volcano" : "green";
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      width: "30%",
     },
     {
       title: "Lĩnh Vực",

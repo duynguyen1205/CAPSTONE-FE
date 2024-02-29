@@ -4,17 +4,7 @@ import {
   InfoCircleOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  ConfigProvider,
-  Input,
-  Row,
-  Space,
-  Table,
-  Tabs,
-  Tag,
-} from "antd";
+import { Button, ConfigProvider, Input, Space, Table, Tabs } from "antd";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "../../staff/project/project.scss";
@@ -134,117 +124,89 @@ const ProjectManagerUser = () => {
   const dataSource = [
     {
       key: "1",
-      name: "Mike",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 32,
       field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "2",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
       field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "3",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "4",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "5",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "6",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "7",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "8",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "9",
-      name: "John",
+      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "10",
       name: "Duy",
       age: 42,
-      field: "10 Downing Street",
+      field: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
   ];
   const columns = [
-    {
-      title: "No.",
-      key: "index",
-      render: (text, record, index) => index + 1,
-    },
     {
       title: "ID",
       key: "index",
       render: (text, record, index) => index + 1,
       color: "red",
+      width: "10%",
     },
     {
       title: "Tên Đề Tài",
       dataIndex: "name",
       key: "name",
       ...getColumnSearchProps("name"),
-    },
-    {
-      title: "Trạng thái",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "volcano" : "green";
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      width: "30%",
     },
     {
       title: "Lĩnh Vực",

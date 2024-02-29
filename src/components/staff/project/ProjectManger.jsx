@@ -1,15 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  ConfigProvider,
-  Input,
-  Row,
-  Space,
-  Table,
-  Tabs,
-  Tag,
-} from "antd";
+import { Button, ConfigProvider, Input, Space, Table, Tabs } from "antd";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "./project.scss";
@@ -19,75 +9,66 @@ const ProjectManager = () => {
   const dataSource = [
     {
       key: "1",
-      name: "Mike",
+      name: "Nghiên cứu hóa sinh về công nghệ mới ",
       age: 32,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "2",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "3",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "4",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "5",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "6",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "7",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "8",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "9",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
     {
       key: "10",
@@ -95,81 +76,71 @@ const ProjectManager = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chưa được duyệt"],
     },
   ];
   const dataSource1 = [
     {
       key: "1",
-      name: "Mike",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 32,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "2",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "3",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "4",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "5",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "6",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "7",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "8",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "9",
-      name: "John",
+      name: "Nghiên cứu hóa sinh về công nghệ mới",
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
     {
       key: "10",
@@ -177,7 +148,6 @@ const ProjectManager = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      tags: ["Chờ xác nhận"],
     },
   ];
   const [current, setCurrent] = useState(1);
@@ -194,13 +164,18 @@ const ProjectManager = () => {
       children: <></>,
     },
     {
+      key: "wait",
+      label: `Chờ sơ duyệt`,
+      children: <></>,
+    },
+    {
       key: "chohoidong",
       label: `Chờ hội đồng`,
       children: <></>,
     },
     {
       key: "hoanthanh",
-      label: `Hoàn thành`,
+      label: `Bị từ chối`,
       children: <></>,
     },
   ];
@@ -296,36 +271,17 @@ const ProjectManager = () => {
 
   const columns = [
     {
-      title: "No.",
-      key: "index",
-      render: (text, record, index) => index + 1,
-    },
-    {
       title: "ID",
       key: "index",
       render: (text, record, index) => index + 1,
-      color: "red",
+      width: "10%",
     },
     {
       title: "Tên Đề Tài",
       dataIndex: "name",
       key: "name",
+      width: "30%",
       ...getColumnSearchProps("name"),
-    },
-    {
-      title: "Trạng thái",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "volcano" : "green";
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
     },
     {
       title: "Lĩnh Vực",
