@@ -1,5 +1,14 @@
 import React, { useRef, useState } from "react";
-import { Button, ConfigProvider, Input, Space, Table, message } from "antd";
+import {
+  Badge,
+  Button,
+  ConfigProvider,
+  Input,
+  Popover,
+  Space,
+  Table,
+  message,
+} from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import ModalPickTime from "./ModalPickTime";
 import Highlighter from "react-highlight-words";
@@ -7,6 +16,7 @@ import "../../user/project/table.scss";
 import {
   EyeInvisibleOutlined,
   EyeOutlined,
+  GroupOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 const AddMemberApprove = () => {
@@ -166,7 +176,6 @@ const AddMemberApprove = () => {
           ) : (
             <p>{maskPhoneNumber(record.phone)}</p>
           )}
-          
         </Space>
       ),
     },
@@ -251,15 +260,12 @@ const AddMemberApprove = () => {
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      setSelectedUser(selectedRows)
-    },
-    getCheckboxProps: (record) => {
-      if (selectedUser.length > 4 && path === "add-member") {
-        return {
-          disabled: !selectedUser.includes(record.key),
-        };
-      }
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        "selectedRows: ",
+        selectedRows
+      );
+      setSelectedUser(selectedRows);
     },
     hideSelectAll: true,
   };
@@ -320,7 +326,15 @@ const AddMemberApprove = () => {
       </Space>
     </div>
   );
-
+  const listUser = (
+    <div>
+       {selectedUser.map((user) => (
+        <div key={user.id}>
+          <p>{user.name}</p>
+        </div>
+      ))}
+    </div>
+  );
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
@@ -329,39 +343,54 @@ const AddMemberApprove = () => {
       <span
         style={{
           marginLeft: 8,
-          marginBottom: 8,
         }}
       >
-        {hasSelected ? `Đã chọn ${selectedUser.length} nhân viên` : ""}
+        {" "}
+        {hasSelected ? (
+          <div>
+            <Space direction="" size={"middle"}>
+            <Popover content={listUser} title="Nhà khoa học đã chọn">
+            <Badge count={selectedUser.length}>
+              <GroupOutlined style={{ fontSize: "20px", color: "#08c" }} />
+            </Badge>
+            </Popover>
+            <p>Đã chọn {selectedUser.length} nhà khoa học</p>
+            </Space>
+          </div>
+        ) : (
+          ""
+        )}
       </span>
-      <Table
-        rowClassName={(record, index) =>
-          index % 2 === 0 ? "table-row-light" : "table-row-dark"
-        }
-        bordered={true}
-        rowSelection={{
-          ...rowSelection
-        }}
-        columns={columns}
-        dataSource={showFullData ? data : maskedData}
-        onChange={onChange}
-        pagination={{
-          current: current,
-          pageSize: pageSize,
-          showSizeChanger: true,
-          total: total,
-          pageSizeOptions: ["5", "10", "15"],
-          showTotal: (total, range) => {
-            return (
-              <div>
-                {range[0]} - {range[1]} on {total} rows
-              </div>
-            );
-          },
-        }}
-        loading={isLoading}
-        footer={renderFooter}
-      />
+      <div>
+        <Table
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "table-row-light" : "table-row-dark"
+          }
+          bordered={true}
+          rowSelection={{
+            ...rowSelection,
+          }}
+          columns={columns}
+          dataSource={showFullData ? data : maskedData}
+          onChange={onChange}
+          pagination={{
+            current: current,
+            pageSize: pageSize,
+            showSizeChanger: true,
+            total: total,
+            pageSizeOptions: ["5", "10", "15"],
+            showTotal: (total, range) => {
+              return (
+                <div>
+                  {range[0]} - {range[1]} on {total} rows
+                </div>
+              );
+            },
+          }}
+          loading={isLoading}
+          footer={renderFooter}
+        />
+      </div>
 
       {/* modal pickdate */}
       <ModalPickTime
