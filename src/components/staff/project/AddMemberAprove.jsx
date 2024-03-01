@@ -10,7 +10,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 const AddMemberApprove = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedUser, setSelectedUser] = useState([]);
   const [user, setUser] = useState([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -200,13 +200,8 @@ const AddMemberApprove = () => {
       email: "duy56236@gmail.com",
     });
   }
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
   // xử lý hội đồng sơ duyệt
   const onSubmit = () => {
-    const status = true;
     const users = [];
     data.forEach((items) => {
       if (selectedRowKeys.includes(items.key)) {
@@ -214,10 +209,6 @@ const AddMemberApprove = () => {
       }
       setUser(users);
     });
-    if (status) {
-      message.success("Tạo thành viên hội đồng thành công");
-      navigate("/staff/manager");
-    }
     console.log("check list user", user);
   };
   // xử lý hội đồng đánh giá
@@ -259,18 +250,20 @@ const AddMemberApprove = () => {
     }));
   };
   const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      setSelectedUser(selectedRows)
+    },
     getCheckboxProps: (record) => {
-      if (selectedRowKeys.length > 4 && path === "add-member") {
+      if (selectedUser.length > 4 && path === "add-member") {
         return {
-          disabled: !selectedRowKeys.includes(record.key),
+          disabled: !selectedUser.includes(record.key),
         };
       }
     },
     hideSelectAll: true,
   };
-  const hasSelected = selectedRowKeys.length > 0;
+  const hasSelected = selectedUser.length > 0;
   const onChange = (pagination, filters, sorter, extra) => {
     if (pagination.current !== current) {
       setCurrent(pagination.current);
@@ -339,14 +332,16 @@ const AddMemberApprove = () => {
           marginBottom: 8,
         }}
       >
-        {hasSelected ? `Đã chọn ${selectedRowKeys.length} nhân viên` : ""}
+        {hasSelected ? `Đã chọn ${selectedUser.length} nhân viên` : ""}
       </span>
       <Table
         rowClassName={(record, index) =>
           index % 2 === 0 ? "table-row-light" : "table-row-dark"
         }
         bordered={true}
-        rowSelection={rowSelection}
+        rowSelection={{
+          ...rowSelection
+        }}
         columns={columns}
         dataSource={showFullData ? data : maskedData}
         onChange={onChange}

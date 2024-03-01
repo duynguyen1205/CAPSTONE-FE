@@ -1,5 +1,5 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Input, Space, Table, Tabs } from "antd";
+import { SearchOutlined, UserAddOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { Button, ConfigProvider, Input, Space, Table, Tabs, Tooltip } from "antd";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "./project.scss";
@@ -307,26 +307,34 @@ const ProjectManager = () => {
             >
               {" "}
               {checkTab === "notyet" && (
-                <Button
-                  shape="round"
-                  type="primary"
-                  onClick={() => {
-                    navigate(`/staff/manager/add-member/${record.key}`);
-                  }}
+                <Tooltip
+                  placement="top"
+                  title={"Gửi sơ duyệt"}
                 >
-                  Gửi sơ duyệt
-                </Button>
+                  <UserAddOutlined
+                    style={{ fontSize: "20px", color: "blue" }}
+                    type="primary"
+                    onClick={() => {
+                      navigate(`/staff/manager/add-member/${record.key}`);
+                    }}
+                  />
+                </Tooltip>
               )}
               {checkTab === "chohoidong" && (
-                <Button
-                  shape="round"
+                 <Tooltip
+                 placement="top"
+                 title={"Gửi hội đồng"}
+               >
+                <UsergroupAddOutlined
+                  style={{ fontSize: "20px", color: "blue" }}
                   type="primary"
                   onClick={() => {
                     navigate(`/staff/manager/add-council/${record.key}`);
                   }}
                 >
                   Gửi hội đồng
-                </Button>
+                </UsergroupAddOutlined>
+                </Tooltip>
               )}
             </ConfigProvider>
           </div>
