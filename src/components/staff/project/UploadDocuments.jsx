@@ -1,16 +1,24 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  InfoCircleOutlined,
+  SearchOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { Button, ConfigProvider, Input, Space, Table, Tabs, Tag } from "antd";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "./project.scss";
 import { useNavigate } from "react-router-dom";
 import ModalUpload from "./ModalUpload";
+import ModalInfor from "../../user/project/ModalInfor";
 const UploadDocument = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setDataUser] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dataPro, setDataPro] = useState({});
+  const [isModalInforOpen, setIsModalInforOpen] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
@@ -120,7 +128,6 @@ const UploadDocument = () => {
       age: 32,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      
     },
     {
       key: "2",
@@ -128,7 +135,6 @@ const UploadDocument = () => {
       age: 42,
       address: "Nghiên cứu bệnh lý",
       date: "03-04-2024",
-      
     },
     {
       key: "3",
@@ -136,7 +142,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
     {
       key: "4",
@@ -144,7 +149,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
     {
       key: "5",
@@ -152,7 +156,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
     {
       key: "6",
@@ -160,7 +163,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
     {
       key: "7",
@@ -168,7 +170,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
     {
       key: "8",
@@ -176,7 +177,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
     {
       key: "9",
@@ -184,7 +184,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
     {
       key: "10",
@@ -192,7 +191,6 @@ const UploadDocument = () => {
       age: 42,
       address: "10 Downing Street",
       date: "03-04-2024",
-      
     },
   ];
   const columns = [
@@ -200,7 +198,7 @@ const UploadDocument = () => {
       title: "Id",
       key: "index",
       render: (text, record, index) => index + 1,
-      width: "10%"
+      width: "10%",
     },
     {
       title: "Tên Đề Tài",
@@ -224,24 +222,22 @@ const UploadDocument = () => {
       render: (text, record, index) => {
         return (
           <div style={{ textAlign: "center" }}>
-            <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: "#55E6A0",
-                },
-              }}
-            >
-              <Button
-                shape="round"
-                type="primary"
+            <Space size={"middle"}>
+              <InfoCircleOutlined
+                style={{ fontSize: "20px", color: "blue" }}
+                onClick={() => {
+                  setIsModalInforOpen(true);
+                  setDataPro(record);
+                }}
+              />
+              <UploadOutlined
+                style={{ fontSize: "20px", color: "green" }}
                 onClick={() => {
                   setDataUser(record);
                   setIsModalOpen(true);
                 }}
-              >
-                Tải kết quả
-              </Button>
-            </ConfigProvider>
+              />
+            </Space>
           </div>
         );
       },
@@ -263,7 +259,7 @@ const UploadDocument = () => {
   //search
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -284,7 +280,7 @@ const UploadDocument = () => {
     }
     console.log("parms: ", pagination, filters, sorter, extra);
   };
-  
+
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
@@ -322,6 +318,11 @@ const UploadDocument = () => {
         setDataUser={setDataUser}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+      />
+      <ModalInfor
+        data={dataPro}
+        isModalOpen={isModalInforOpen}
+        setIsModalOpen={setIsModalInforOpen}
       />
     </div>
   );

@@ -21,7 +21,6 @@ const ModalUpload = (props) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [fileList, setFileList] = useState([]);
   const data = props.data;
-  console.log("check data: ", data);
   const handleOk = () => {
     form.submit();
   };

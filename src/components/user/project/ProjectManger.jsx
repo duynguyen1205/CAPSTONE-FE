@@ -11,6 +11,7 @@ import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
 import ModalInfor from "./ModalInfor";
 import "./table.scss";
+import ModalReject from "./ModalReject";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
@@ -18,7 +19,9 @@ const ProjectManagerUser = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalRejOpen, setIsModalRejOpen] = useState(false);
   const [data, setDataUser] = useState({});
+  const [dataPro, setDataPro] = useState({});
   const navigate = useNavigate();
   const items = [
     {
@@ -250,7 +253,13 @@ const ProjectManagerUser = () => {
                 }}
               />
               <CheckOutlined style={style2} />
-              <CloseOutlined style={style3} />
+              <CloseOutlined
+                style={style3}
+                onClick={() => {
+                  setDataPro(record);
+                  setIsModalRejOpen(true);
+                }}
+              />
             </Space>
           </div>
         );
@@ -328,6 +337,11 @@ const ProjectManagerUser = () => {
         data={data}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+      />
+      <ModalReject
+        data={dataPro}
+        isModalRejOpen={isModalRejOpen}
+        setIsModalRejOpen={setIsModalRejOpen}
       />
     </div>
   );

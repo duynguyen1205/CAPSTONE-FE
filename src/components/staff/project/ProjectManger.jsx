@@ -1,9 +1,23 @@
-import { SearchOutlined, UserAddOutlined, UsergroupAddOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Input, Space, Table, Tabs, Tooltip } from "antd";
+import {
+  InfoCircleOutlined,
+  SearchOutlined,
+  UserAddOutlined,
+  UsergroupAddOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  ConfigProvider,
+  Input,
+  Space,
+  Table,
+  Tabs,
+  Tooltip,
+} from "antd";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "./project.scss";
 import { useNavigate } from "react-router-dom";
+import ModalInfor from "../../user/project/ModalInfor";
 const ProjectManager = () => {
   //data để text
   const dataSource = [
@@ -156,6 +170,8 @@ const ProjectManager = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkTab, setCheckTab] = useState("notyet");
   const [data, setData] = useState(dataSource);
+  const [dataPro, setDataPro] = useState({});
+  const [isModalInforOpen, setIsModalInforOpen] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
@@ -305,37 +321,39 @@ const ProjectManager = () => {
                 },
               }}
             >
-              {" "}
-              {checkTab === "notyet" && (
-                <Tooltip
-                  placement="top"
-                  title={"Gửi sơ duyệt"}
-                >
-                  <UserAddOutlined
-                    style={{ fontSize: "20px", color: "blue" }}
-                    type="primary"
-                    onClick={() => {
-                      navigate(`/staff/manager/add-member/${record.key}`);
-                    }}
-                  />
-                </Tooltip>
-              )}
-              {checkTab === "chohoidong" && (
-                 <Tooltip
-                 placement="top"
-                 title={"Gửi hội đồng"}
-               >
-                <UsergroupAddOutlined
+              <Space size={"middle"}>
+                <InfoCircleOutlined
                   style={{ fontSize: "20px", color: "blue" }}
-                  type="primary"
                   onClick={() => {
-                    navigate(`/staff/manager/add-council/${record.key}`);
+                    setIsModalInforOpen(true);
+                    setDataPro(record);
                   }}
-                >
-                  Gửi hội đồng
-                </UsergroupAddOutlined>
-                </Tooltip>
-              )}
+                />{" "}
+                {checkTab === "notyet" && (
+                  <Tooltip placement="top" title={"Gửi sơ duyệt"}>
+                    <UserAddOutlined
+                      style={{ fontSize: "20px", color: "blue" }}
+                      type="primary"
+                      onClick={() => {
+                        navigate(`/staff/manager/add-member/${record.key}`);
+                      }}
+                    />
+                  </Tooltip>
+                )}
+                {checkTab === "chohoidong" && (
+                  <Tooltip placement="top" title={"Gửi hội đồng"}>
+                    <UsergroupAddOutlined
+                      style={{ fontSize: "20px", color: "blue" }}
+                      type="primary"
+                      onClick={() => {
+                        navigate(`/staff/manager/add-council/${record.key}`);
+                      }}
+                    >
+                      Gửi hội đồng
+                    </UsergroupAddOutlined>
+                  </Tooltip>
+                )}
+              </Space>
             </ConfigProvider>
           </div>
         );
@@ -413,6 +431,12 @@ const ProjectManager = () => {
         }}
         title={renderHeader}
         loading={isLoading}
+      />
+
+      <ModalInfor
+        data={dataPro}
+        isModalOpen={isModalInforOpen}
+        setIsModalOpen={setIsModalInforOpen}
       />
     </div>
   );

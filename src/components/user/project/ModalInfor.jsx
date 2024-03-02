@@ -14,7 +14,7 @@ const ModalInfor = (props) => {
   const [form] = Form.useForm();
 
   const data = props.data;
-  console.log("check data: ", data);
+
   const handleCancel = () => {
     props.setIsModalOpen(false);
   };
@@ -31,6 +31,7 @@ const ModalInfor = (props) => {
         open={isModalOpen}
         onCancel={handleCancel}
         maskClosable={false}
+        forceRender
         footer={[
           <Button key="back" onClick={handleCancel}>
             Thoát
@@ -57,15 +58,6 @@ const ModalInfor = (props) => {
             </Col>
             <Col span={12}>
               <Form.Item name="field" label="Lĩnh vực nghiên cứu" labelCol={{ span: 24 }}>
-                <Input disabled />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                name="council"
-                label="Hội đồng xét duyệt"
-                labelCol={{ span: 24 }}
-              >
                 <Input disabled />
               </Form.Item>
             </Col>
