@@ -29,6 +29,11 @@ const ModalPickTimeLeader = (props) => {
   const maxDate = dayjs().add(7, "day");
   const steps = [
     {
+      title: "Lựa chọn chairman",
+      content: <>Hiện danh sách thành viên chọn leader</>,
+      icon: <FaUserTie />,
+    },
+    {
       title: "Chọn thời gian",
       content: (
         <>
@@ -80,11 +85,6 @@ const ModalPickTimeLeader = (props) => {
         </>
       ),
       icon: <MdAccessTime />,
-    },
-    {
-      title: "Lựa chọn chairman",
-      content: <>Hiện danh sách thành viên chọn leader</>,
-      icon: <FaUserTie />,
     },
     {
       title: "Xác nhận lại thông tin",
