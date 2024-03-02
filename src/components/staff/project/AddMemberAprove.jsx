@@ -10,7 +10,6 @@ import {
   message,
 } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
-import ModalPickTime from "./ModalPickTime";
 import Highlighter from "react-highlight-words";
 import "../../user/project/table.scss";
 import {
@@ -19,6 +18,7 @@ import {
   GroupOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import ModalPickTimeLeader from "./ModalPickTimeLeader";
 const AddMemberApprove = () => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [user, setUser] = useState([]);
@@ -211,25 +211,11 @@ const AddMemberApprove = () => {
   }
   // xử lý hội đồng sơ duyệt
   const onSubmit = () => {
-    const users = [];
-    data.forEach((items) => {
-      if (selectedRowKeys.includes(items.key)) {
-        users.push(items);
-      }
-      setUser(users);
-    });
-    console.log("check list user", user);
+
   };
   // xử lý hội đồng đánh giá
   const onSubmitCouncil = () => {
-    const users = [];
-    data.forEach((items) => {
-      if (selectedRowKeys.includes(items.key)) {
-        users.push(items);
-      }
-      setUser(users);
-    });
-    console.log("check list user", user);
+
   };
   // hide email and phone munber
   const maskEmail = (email) => {
@@ -392,8 +378,8 @@ const AddMemberApprove = () => {
         />
       </div>
 
-      {/* modal pickdate */}
-      <ModalPickTime
+      {/* modal pick time and leader */}
+      <ModalPickTimeLeader
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       />
