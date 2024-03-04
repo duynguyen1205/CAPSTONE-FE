@@ -1,9 +1,12 @@
 import {
+  FileProtectOutlined,
+  FileSearchOutlined,
   HomeOutlined,
   UnorderedListOutlined,
   UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+
 import {
   Layout,
   Menu,
@@ -26,9 +29,14 @@ const items = [
     icon: <HomeOutlined />,
   },
   {
-    label: <Link to="/user/manager">Quản lý</Link>,
+    label: <Link to="/user/manager">Đề tài sơ duyệt</Link>,
     key: "manager",
-    icon: <UnorderedListOutlined />,
+    icon: <FileProtectOutlined />,
+  },
+  {
+    label: <Link to="/user/manager-review">Đề tài thông qua</Link>,
+    key: "manager-review",
+    icon: <FileSearchOutlined />,
   },
   {
     label: <Link to="/user/upload-document">Tải tài liệu lên </Link>,
@@ -74,6 +82,7 @@ const LayoutUser = () => {
   const location = useLocation();
   let path = location.pathname.split("/");
   path = path[2];
+  console.log(path);
   if (path === undefined) {
     path = "dashboard";
   }

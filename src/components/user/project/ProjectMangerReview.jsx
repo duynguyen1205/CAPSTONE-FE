@@ -13,7 +13,7 @@ import ModalInfor from "./ModalInfor";
 import "./table.scss";
 import ModalReject from "./ModalReject";
 // import ModalInfor from "../../modalInfor.jsx";
-const ProjectManagerUser = () => {
+const ProjectManagerUserReview = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -26,12 +26,12 @@ const ProjectManagerUser = () => {
   const items = [
     {
       key: "notyet",
-      label: `Chưa duyệt`,
+      label: `Chưa thông qua`,
       children: <></>,
     },
     {
       key: "chohoidong",
-      label: `Đã duyệt`,
+      label: `Đã thông qua`,
       children: <></>,
     },
   ];
@@ -305,7 +305,7 @@ const ProjectManagerUser = () => {
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
-        Danh sách đề tài chờ sơ duyệt
+        Danh sách đề tài chờ thông qua
       </h2>
       <Table
         rowClassName={(record, index) =>
@@ -347,4 +347,4 @@ const ProjectManagerUser = () => {
   );
 };
 
-export default ProjectManagerUser;
+export default ProjectManagerUserReview;

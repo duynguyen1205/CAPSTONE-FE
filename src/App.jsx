@@ -11,6 +11,7 @@ import UploadDoc from "./pages/uploads/index.jsx";
 import LayoutUser from "./components/user/LayoutUser.jsx";
 import ProjectUser from "./pages/projectMangerUser/index.jsx";
 import UserPage from "./pages/user/index.jsx";
+import ProjectUserReview from "./pages/projectMangerUserReview/index.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -48,8 +49,8 @@ function App() {
             },
             {
               path: "add-council/:projectId",
-              element: <AddMemberApprove/>
-            }
+              element: <AddMemberApprove />,
+            },
           ],
         },
         {
@@ -72,12 +73,22 @@ function App() {
           element: <UserPage />,
         },
         {
+          path: "manager-review",
+          element: <Outlet />,
+          children: [
+            {
+              index: true,
+              element: <ProjectUserReview />,
+            },
+          ],
+        },
+        {
           path: "manager",
           element: <Outlet />,
           children: [
             {
               index: true,
-              element: <ProjectUser/>,
+              element: <ProjectUser />,
             },
           ],
         },
@@ -91,7 +102,6 @@ function App() {
         },
       ],
     },
-    
   ]);
   return (
     <>
