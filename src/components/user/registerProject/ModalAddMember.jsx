@@ -1,7 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import { Col, Form, Input, InputNumber, Modal, Row, Select } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Col, Form, Input, AutoComplete, Modal, Row, Select } from "antd";
 const { TextArea } = Input;
-const ModalAddMember = ({ open, onCancel }) => {
+const ModalAddMember = ({ open, onCancel, data }) => {
+  const options = data.map((user) => ({
+    value: user.email,
+    label: user.email, // Hiển thị tên người dùng
+  }));
   // reset form fields when modal is form, closed
   const useResetFormOnCloseModal = ({ form, open }) => {
     const prevOpenRef = useRef();
@@ -15,7 +19,6 @@ const ModalAddMember = ({ open, onCancel }) => {
       }
     }, [form, prevOpen, open]);
   };
-
   const [form] = Form.useForm();
   useResetFormOnCloseModal({
     form,
@@ -24,12 +27,14 @@ const ModalAddMember = ({ open, onCancel }) => {
   const onOk = () => {
     form.submit();
   };
+
   return (
     <Modal
       title="Thêm nhân viên vào đề tài"
       open={open}
       onOk={onOk}
       onCancel={onCancel}
+      forceRender
     >
       {" "}
       <Form form={form} layout="vertical" name="userForm">
@@ -37,15 +42,18 @@ const ModalAddMember = ({ open, onCancel }) => {
           <Col span={15}>
             {" "}
             <Form.Item
-              name="name"
-              label="User Name"
+              name="email"
+              label="Email nhà khoa học"
               rules={[
                 {
                   required: true,
+                  message: "Vui lòng chọn nhà khoa học",
                 },
               ]}
             >
-              <Input />
+              <AutoComplete options={options} filterOption={true}>
+                <Input.Search placeholder="Tìm nhà khoa học" />
+              </AutoComplete>
             </Form.Item>
           </Col>
           <Col span={9}>
@@ -80,7 +88,7 @@ const ModalAddMember = ({ open, onCancel }) => {
           <Col span={24}>
             {" "}
             <Form.Item
-              name="note"
+              name="taskDescription"
               label="Phụ trách công việc"
               rules={[
                 {

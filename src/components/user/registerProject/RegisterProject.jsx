@@ -26,6 +26,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import ModalAddMember from "./ModalAddMember";
+import { getAllCategory, getAllUser } from "../../../services/api";
 dayjs.extend(customParseFormat);
 const dateFormat = "YYYY-MM-DD";
 const { TextArea } = Input;
@@ -34,6 +35,7 @@ const { Dragger } = Upload;
 
 const RegisterProject = () => {
   const [open, setOpen] = useState(false);
+  const [category, setCategory] = useState([]);
   const [listUser, setListUser] = useState([]);
   const showUserModal = () => {
     setOpen(true);
@@ -81,6 +83,22 @@ const RegisterProject = () => {
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
+  const getCategory = async () => {
+    const res = await getAllCategory();
+    if (res && res?.data) {
+      setCategory(res.data);
+    }
+  };
+  const getUser = async () => {
+    const res = await getAllUser();
+    if (res && res?.data) {
+      setListUser(res?.data);
+    }
+  };
+  useEffect(() => {
+    getUser();
+    getCategory();
+  }, []);
   return (
     <>
       <h2
@@ -184,20 +202,10 @@ const RegisterProject = () => {
                   style={{
                     width: 150,
                   }}
-                  options={[
-                    {
-                      value: "scien",
-                      label: "sinh lý",
-                    },
-                    {
-                      value: "lucy",
-                      label: "phụ sản",
-                    },
-                    {
-                      value: "tom",
-                      label: "tâm lý học",
-                    },
-                  ]}
+                  options={category.map((item) => ({
+                    value: item.categoryId,
+                    label: item.categoryName, // Hiển thị tên người dùng
+                  }))}
                 />
               </Form.Item>
             </Col>
@@ -225,7 +233,6 @@ const RegisterProject = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Xin hãy thêm thành viên nghiên cứu",
                   },
                 ]}
                 shouldUpdate={(prevValues, curValues) =>
@@ -240,9 +247,9 @@ const RegisterProject = () => {
                         <li key={user.index} className="user">
                           <Space>
                             <Avatar icon={<UserOutlined />} />
-                            {`${user.name} - ${
+                            {`${user.email} - ${
                               user.role === 1 ? "Thành viên" : "Thư kí"
-                            } - ${user.note}`}
+                            } - ${user.taskDescription}`}
                             <CloseOutlined
                               onClick={() => {
                                 delete users[index];
@@ -404,7 +411,7 @@ const RegisterProject = () => {
           </Row>
         </Form>
         {/* modal thêm người dùng */}
-        <ModalAddMember open={open} onCancel={hideUserModal} />
+        <ModalAddMember open={open} onCancel={hideUserModal} data = {listUser} />
       </Form.Provider>
     </>
   );
