@@ -82,7 +82,6 @@ const LayoutUser = () => {
   const location = useLocation();
   let path = location.pathname.split("/");
   path = path[2];
-  console.log(path);
   if (path === undefined) {
     path = "dashboard";
   }

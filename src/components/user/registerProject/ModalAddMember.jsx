@@ -56,7 +56,7 @@ const ModalAddMember = ({ open, onCancel }) => {
               rules={[
                 {
                   required: true,
-                  message: "Xin hãy chọn vai",
+                  message: "Xin hãy chọn vai trò",
                 },
               ]}
             >
@@ -66,15 +66,11 @@ const ModalAddMember = ({ open, onCancel }) => {
                 }}
                 options={[
                   {
-                    value: "Chủ nhiệm",
-                    label: "Chủ nhiệm",
-                  },
-                  {
-                    value: "Thành viên",
+                    value: "1",
                     label: "Thành viên",
                   },
                   {
-                    value: "Thư kí",
+                    value: "0",
                     label: "Thư kí",
                   },
                 ]}
@@ -89,6 +85,7 @@ const ModalAddMember = ({ open, onCancel }) => {
               rules={[
                 {
                   required: true,
+                  message: "Xin hãy ghi công việc phụ trách",
                 },
               ]}
             >

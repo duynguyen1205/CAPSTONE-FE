@@ -204,7 +204,7 @@ const RegisterProject = () => {
 
             <Col span={12}>
               <Form.Item
-              required={true}
+                required={true}
                 name="group"
                 label="Thêm thành viên thực hiện"
               >
@@ -240,18 +240,13 @@ const RegisterProject = () => {
                         <li key={user.index} className="user">
                           <Space>
                             <Avatar icon={<UserOutlined />} />
-                            {`${user.name} - ${user.role}`}
+                            {`${user.name} - ${
+                              user.role === 1 ? "Thành viên" : "Thư kí"
+                            } - ${user.note}`}
                             <CloseOutlined
                               onClick={() => {
                                 delete users[index];
                                 const updatedUsers = users.filter((u) => !!u);
-                                console.log(
-                                  "updatedUsers: ",
-                                  index,
-                                  updatedUsers,
-                                  users[index],
-                                  user?.name
-                                );
                                 setFieldsValue({ users: updatedUsers });
                               }}
                               style={{ paddingLeft: 15 }}
@@ -396,7 +391,13 @@ const RegisterProject = () => {
                   },
                 }}
               >
-                <Button style={{marginLeft: "500px"}} type="primary" htmlType="submit">Xác nhận</Button>
+                <Button
+                  style={{ marginLeft: "500px" }}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Xác nhận
+                </Button>
               </ConfigProvider>
               ,
             </Form.Item>
