@@ -5,6 +5,7 @@ const ModalReject = (props) => {
   const [form] = Form.useForm();
   const [isSubmit, setIsSubmit] = useState(false);
   const data = props.data;
+  console.log(data);
   const handleOk = () => {
     form.submit();
   };
@@ -15,6 +16,19 @@ const ModalReject = (props) => {
 
   const onSubmit = async (values) => {
     console.log("check values: ", values);
+    const param = {
+      topicId: data.id,
+      decision: false,
+      rejectReason: values.comment
+    }
+    createDeanMakeDecesion(param)
+    .then((data) =>{
+      console.log(data)
+      handleCancel()
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
   };
   const isModalOpen = props.isModalRejOpen;
   // set up initial value for the form

@@ -1,4 +1,5 @@
 import axios from "../utils/axios-customize";
+import qs from "query-string";
 
 // gọi tất cả api ở đây
 
@@ -31,4 +32,14 @@ export const uploadFile = (files) => {
       "Content-Type": "multipart/form-data",
     },
   });
+}
+
+//  get topic for dean
+export const getTopicForDean = (param) => {
+  return axios.get(`/api/topic/topic-for-dean?${qs.stringify(param)}`);
+}
+
+// dean make decision
+export const createDeanMakeDecesion = (param) => {
+  return axios.post("/api/topic/dean-make-decision",param);
 }

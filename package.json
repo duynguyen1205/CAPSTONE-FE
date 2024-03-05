@@ -14,6 +14,7 @@
     "antd": "^5.14.2",
     "axios": "^1.6.7",
     "dayjs-ext": "^2.2.0",
+    "query-string": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-highlight-words": "^0.20.0",
