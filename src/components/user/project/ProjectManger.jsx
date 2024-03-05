@@ -5,13 +5,14 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Button, ConfigProvider, Input, Space, Table, Tabs } from "antd";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
 import ModalInfor from "./ModalInfor";
 import "./table.scss";
 import ModalReject from "./ModalReject";
+import { getTopicReviewerAPI } from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
@@ -22,7 +23,13 @@ const ProjectManagerUser = () => {
   const [isModalRejOpen, setIsModalRejOpen] = useState(false);
   const [data, setDataUser] = useState({});
   const [dataPro, setDataPro] = useState({});
+  const [topic, setTopic] = useState([]);
+  const [activeTab, setActiveTab] = useState("notyet");
+  const userId = "9645623f-dec0-4741-be28-0baeb1590c8c";
   const navigate = useNavigate();
+  useEffect(() => {
+    getTopicReview(userId);
+  }, [activeTab]);
   const items = [
     {
       key: "notyet",
@@ -267,13 +274,25 @@ const ProjectManagerUser = () => {
       align: "center",
     },
   ];
+  const getTopicReview = async (ID) => {
+    try {
+      const res = await getTopicReviewerAPI(ID);
+      if (res && res?.data) {
+        setTopic(res.data);
+      }
+    } catch (error) {
+      console.error("Error get topic list:", error);
+    }
+  };
+
+
   const renderHeader = () => (
     <div>
       <Tabs
         defaultActiveKey="notyet"
         items={items}
         onChange={(value) => {
-          setSortQuery(value);
+          setActiveTab(value);
         }}
         style={{ overflowX: "auto", marginLeft: "30px" }}
       />
@@ -313,7 +332,7 @@ const ProjectManagerUser = () => {
         }
         bordered={true}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={topic}
         onChange={onChange}
         rowKey={"_id"}
         pagination={{

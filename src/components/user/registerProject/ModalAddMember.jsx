@@ -30,7 +30,7 @@ const ModalAddMember = ({ open, onCancel, data }) => {
 
   return (
     <Modal
-      title="Thêm nhân viên vào đề tài"
+      title="Thêm nhân viên"
       open={open}
       onOk={onOk}
       onCancel={onCancel}
@@ -43,7 +43,7 @@ const ModalAddMember = ({ open, onCancel, data }) => {
             {" "}
             <Form.Item
               name="email"
-              label="Email nhà khoa học"
+              label="Họ và tên"
               rules={[
                 {
                   required: true,

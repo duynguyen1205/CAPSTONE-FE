@@ -42,15 +42,6 @@ const ModalPickTimeLeader = (props) => {
             <Divider />
             <Form form={form} name="basic">
               <Row gutter={20}>
-                <Col span={12}>
-                  <Form.Item
-                    name="key"
-                    label="Tên đề tài"
-                    labelCol={{ span: 24 }}
-                  >
-                    <Input disabled />
-                  </Form.Item>
-                </Col>
                 <Col>
                   <Form.Item
                     name="date"

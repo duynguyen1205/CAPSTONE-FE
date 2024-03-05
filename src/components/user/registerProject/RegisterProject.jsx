@@ -26,17 +26,18 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import ModalAddMember from "./ModalAddMember";
-import { getAllCategory, getAllUser } from "../../../services/api";
+import { getAllCategory, getAllUser, uploadFile } from "../../../services/api";
 dayjs.extend(customParseFormat);
-const dateFormat = "YYYY-MM-DD";
+const dateFormat = "DD/MM/YYYY";
 const { TextArea } = Input;
 //
 const { Dragger } = Upload;
-
+const today = dayjs().add(1, "day");
 const RegisterProject = () => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState([]);
   const [listUser, setListUser] = useState([]);
+  const [fileList, setFileList] = useState([]);
   const showUserModal = () => {
     setOpen(true);
   };
@@ -44,7 +45,19 @@ const RegisterProject = () => {
     setOpen(false);
   };
   const onFinish = (values) => {
-    console.log("check values:", values);
+    // chuyển trường email thành trường id
+    const user = values.users;
+    const emailToIdMap = {};
+    listUser.forEach((item) => {
+      emailToIdMap[item.email] = item.id;
+    });
+    const newData = user.map((item) => {
+      const userId = emailToIdMap[item.email];
+      const newItem = { userId, ...item };
+      delete newItem.email;
+      return newItem;
+    });
+    console.log("check values:", newData);
   };
   const selectAfter = (
     <Select
@@ -67,16 +80,31 @@ const RegisterProject = () => {
   const props = {
     name: "file",
     multiple: true,
-    customRequest: dummyRequest,
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+    customRequest: async ({ file, onSuccess, onError }) => {
+      try {
+        // Thực hiện tải lên file thông qua API của bạn
+        const response = await uploadFile(file);
+        setFileList((fileList) => [
+          ...fileList,
+          {
+            topicFileName: response.data.fileName,
+            topicFileLink: response.data.fileLink,
+          },
+        ]);
+        console.log('====================================');
+        console.log('check fileList', response);
+        console.log('====================================');
+        // Gọi onSuccess để xác nhận rằng tải lên đã thành công
+        onSuccess(response, file);
+  
+        // Hiển thị thông báo thành công
+        message.success(`${file.name} file uploaded successfully.`);
+      } catch (error) {
+        // Gọi onError để thông báo lỗi nếu có vấn đề khi tải lên
+        onError(error);
+  
+        // Hiển thị thông báo lỗi
+        message.error(`${file.name} file upload failed.`);
       }
     },
     onDrop(e) {
@@ -99,6 +127,7 @@ const RegisterProject = () => {
     getUser();
     getCategory();
   }, []);
+
   return (
     <>
       <h2
@@ -124,10 +153,10 @@ const RegisterProject = () => {
         }}
       >
         <Form form={form} name="basicForm" onFinish={onFinish}>
-          <Row gutter={20}>
+          <Row gutter={16}>
             <Col span={24}>
               <Form.Item
-                name="key"
+                name="name"
                 label="Tên đề tài"
                 rules={[
                   {
@@ -135,15 +164,10 @@ const RegisterProject = () => {
                     message: "Xin hãy nhập tên đề tài",
                   },
                 ]}
-                labelCol={{
-                  span: 2,
-                }}
-                wrapperCol={{ sm: { offset: 3 } }}
               >
                 <Input />
               </Form.Item>
             </Col>
-
             <Col span={24}>
               <Form.Item
                 name="details"
@@ -154,10 +178,6 @@ const RegisterProject = () => {
                     message: "Xin hãy nhập tóm tắt nội dung đề tài",
                   },
                 ]}
-                labelCol={{
-                  span: 2,
-                }}
-                wrapperCol={{ sm: { offset: 3 } }}
               >
                 <TextArea
                   autoSize={{
@@ -174,10 +194,9 @@ const RegisterProject = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Xin hãy nhập kinh phí dựa kiến",
+                    message: "Xin hãy nhập kinh phí dự kiến",
                   },
                 ]}
-                wrapperCol={{ sm: { offset: 4 } }}
               >
                 <InputNumber addonAfter={selectAfter} />
               </Form.Item>
@@ -192,19 +211,12 @@ const RegisterProject = () => {
                     message: "Xin hãy chọn lĩnh vực nghiên cứu",
                   },
                 ]}
-                labelCol={{
-                  span: 7,
-                }}
-                wrapperCol={{ sm: { offset: 1 } }}
-                style={{ marginLeft: "20px" }}
               >
                 <Select
-                  style={{
-                    width: 150,
-                  }}
+                  style={{ width: 150 }}
                   options={category.map((item) => ({
                     value: item.categoryId,
-                    label: item.categoryName, // Hiển thị tên người dùng
+                    label: item.categoryName,
                   }))}
                 />
               </Form.Item>
@@ -214,22 +226,17 @@ const RegisterProject = () => {
               <Form.Item
                 required={true}
                 name="group"
-                label="Thêm thành viên thực hiện"
+                label="Thành viên thực hiện"
               >
-                <Button
-                  htmlType="button"
-                  style={{
-                    margin: "0 8px",
-                  }}
-                  onClick={showUserModal}
-                >
+                <Button htmlType="button" onClick={showUserModal}>
                   Thêm thành viên
                 </Button>
               </Form.Item>
               {/* Create a hidden field to make Form instance record this */}
               <Form.Item name="users" hidden />
+
               <Form.Item
-                label="Thành viên đề tài"
+                label="Thành viên"
                 rules={[
                   {
                     required: true,
@@ -264,7 +271,7 @@ const RegisterProject = () => {
                     </ul>
                   ) : (
                     <Typography.Text className="ant-form-text" type="secondary">
-                      ( <SmileOutlined /> Chưa có thành viên. )
+                      ( Chưa có thành viên. )
                     </Typography.Text>
                   );
                 }}
@@ -273,26 +280,22 @@ const RegisterProject = () => {
             <Col span={12}>
               <Form.Item
                 name="tine"
-                label="Thời gian bắt đầu dự kiến "
+                label="Thời gian bắt đầu dự kiến: "
                 rules={[
                   {
                     required: true,
                     message: "Xin hãy chọn thời gian bắt đầu dự kiến ",
                   },
                 ]}
-                labelCol={{
-                  span: 8,
-                }}
-                wrapperCol={{ sm: { offset: 1 } }}
               >
                 <DatePicker
-                  defaultValue={dayjs("2024-09-03", dateFormat)}
-                  minDate={dayjs("2024-08-27", dateFormat)}
-                  maxDate={dayjs("2030-10-31", dateFormat)}
+                  format={dateFormat}
+                  defaultValue={today}
+                  minDate={today}
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={24}>
               <Form.List name="user">
                 {(fields, { add, remove }) => (
                   <>
@@ -352,13 +355,14 @@ const RegisterProject = () => {
                     ))}
                     <Form.Item
                       name="group1"
-                      label="Thêm thành viên đào tạo (nếu có)"
+                      label="Thành viên đào tạo (nếu có):"
                     >
                       <Button
                         type="dashed"
                         onClick={() => add()}
                         block
                         icon={<PlusOutlined />}
+                        style={{ maxWidth: "200px" }}
                       >
                         Thêm
                       </Button>
@@ -367,8 +371,7 @@ const RegisterProject = () => {
                 )}
               </Form.List>
             </Col>
-            <Col span={24}></Col>
-            <Col span={7}>
+            <Col span={24}>
               <h3>Đính kèm tài liệu liên quan</h3>
               <Form.Item
                 labelCol={{
@@ -380,38 +383,38 @@ const RegisterProject = () => {
                     <InboxOutlined />
                   </p>
                   <p className="ant-upload-text">
-                    Click or drag file to this area to upload
+                    Nhấp hoặc kéo tệp vào khu vực này để tải lên
                   </p>
                   <p className="ant-upload-hint">
-                    Support for a single or bulk upload. Strictly prohibited
-                    from uploading company data or other banned files.
+                    Hỗ trợ tải lên một lần hoặc hàng loạt. Vui lòng để tên file
+                    là tiếng việt không dấu
                   </p>
                 </Dragger>
               </Form.Item>
-            </Col>
-            <Col span={24}></Col>
-            <Form.Item>
-              <ConfigProvider
-                theme={{
-                  token: {
-                    colorPrimary: "#41C221",
-                  },
-                }}
-              >
-                <Button
-                  style={{ marginLeft: "500px" }}
-                  type="primary"
-                  htmlType="submit"
+
+              <Form.Item>
+                <ConfigProvider
+                  theme={{
+                    token: {
+                      colorPrimary: "#41C221",
+                    },
+                  }}
                 >
-                  Xác nhận
-                </Button>
-              </ConfigProvider>
-              ,
-            </Form.Item>
+                  <Button
+                    style={{ marginLeft: "500px" }}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Xác nhận
+                  </Button>
+                </ConfigProvider>
+              </Form.Item>
+            </Col>
           </Row>
         </Form>
+
         {/* modal thêm người dùng */}
-        <ModalAddMember open={open} onCancel={hideUserModal} data = {listUser} />
+        <ModalAddMember open={open} onCancel={hideUserModal} data={listUser} />
       </Form.Provider>
     </>
   );

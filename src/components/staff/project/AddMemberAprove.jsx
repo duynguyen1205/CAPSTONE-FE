@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Badge,
   Button,
@@ -19,6 +19,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import ModalPickTimeLeader from "./ModalPickTimeLeader";
+import { getAllUser } from "../../../services/api";
 const AddMemberApprove = () => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [user, setUser] = useState([]);
@@ -137,9 +138,9 @@ const AddMemberApprove = () => {
   const columns = [
     {
       title: "Tên",
-      dataIndex: "name",
-      ...getColumnSearchProps("name"),
-      sorter: (a, b) => a.name.length - b.name.length,
+      dataIndex: "fullName",
+      ...getColumnSearchProps("fullName"),
+      sorter: (a, b) => a.fullName.length - b.fullName.length,
     },
 
     {
@@ -147,8 +148,8 @@ const AddMemberApprove = () => {
       dataIndex: "position",
     },
     {
-      title: "Khoa",
-      dataIndex: "department",
+      title: "Bằng cấp",
+      dataIndex: "degree",
     },
     {
       title: "Email",
@@ -166,15 +167,15 @@ const AddMemberApprove = () => {
     },
     {
       title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "phone",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
 
       render: (text, record) => (
         <Space>
           {showFullData[record.key] ? (
-            <p>{record.phone}</p>
+            <p>{record.phoneNumber}</p>
           ) : (
-            <p>{maskPhoneNumber(record.phone)}</p>
+            <p>{maskPhoneNumber(record.phoneNumber)}</p>
           )}
         </Space>
       ),
@@ -196,27 +197,35 @@ const AddMemberApprove = () => {
       ),
     },
   ];
-
+  const getUserAPI = async () => {
+    try {
+      const res = await getAllUser();
+      setIsLoading(true);
+      if (res && res?.data) {
+        const dataKey = res.data.map((item) => ({
+          ...item,
+          key: item.id,
+        }));
+        setUser(dataKey);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching get user:", error);
+    }
+  };
+  useEffect(() => {
+    getUserAPI();
+  }, []);
   const navigate = useNavigate();
-  const data = [];
-  for (let i = 0; i < 46; i++) {
-    data.push({
-      key: i,
-      name: `Edward King ${i}`,
-      phone: "09080878661",
-      position: "Bác sĩ",
-      department: "Khoa răng hàm mặt",
-      email: "duy56236@gmail.com",
-    });
-  }
+
   // xử lý hội đồng sơ duyệt
   const onSubmit = () => {
 
+    // Ví dụ: Hiển thị thông báo thành công
+    message.success("Thêm thành viên phê duyệt thành công");
   };
   // xử lý hội đồng đánh giá
-  const onSubmitCouncil = () => {
-
-  };
+  const onSubmitCouncil = () => {};
   // hide email and phone munber
   const maskEmail = (email) => {
     const [username, domain] = email.split("@");
@@ -224,19 +233,21 @@ const AddMemberApprove = () => {
     return `${maskedUsername}@${domain}`;
   };
 
-  const maskPhoneNumber = (phone) => {
-    return `${phone.substring(0, 3)}****${phone.substring(phone.length - 3)}`;
+  const maskPhoneNumber = (phoneNumber) => {
+    return `${phoneNumber.substring(0, 3)}****${phoneNumber.substring(
+      phoneNumber.length - 3
+    )}`;
   };
 
-  const maskData = (data, showFull) => {
-    return data.map((item) => ({
+  const maskData = (user, showFull) => {
+    return user.map((item) => ({
       ...item,
       email: maskEmail(item.email, showFull),
-      phone: maskPhoneNumber(item.phone, showFull),
+      phoneNumber: maskPhoneNumber(item.phoneNumber, showFull),
     }));
   };
 
-  const maskedData = maskData(data, false);
+  const maskedData = maskData(user, false);
 
   const handleToggleShowFullData = (key) => {
     setShowFullData((prevState) => ({
@@ -246,11 +257,6 @@ const AddMemberApprove = () => {
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
       setSelectedUser(selectedRows);
     },
     hideSelectAll: true,
@@ -287,7 +293,7 @@ const AddMemberApprove = () => {
           {" "}
           {path === "add-council" && (
             <Button
-              disabled={hasSelected < 1}
+              disabled={hasSelected < 1 || selectedUser.length % 2 === 0 }
               shape="round"
               type="primary"
               onClick={() => {
@@ -300,10 +306,10 @@ const AddMemberApprove = () => {
           )}
           {path === "add-member" && (
             <Button
-              disabled={hasSelected < 1}
+              disabled={hasSelected < 1 || selectedUser.length % 2 === 0}
               shape="round"
               type="primary"
-              onClick={() => onSubmit()}
+              onClick={onSubmit}
             >
               Thêm thành viên phê duyệt
             </Button>
@@ -314,9 +320,9 @@ const AddMemberApprove = () => {
   );
   const listUser = (
     <div>
-       {selectedUser.map((user) => (
+      {selectedUser.map((user) => (
         <div key={user.id}>
-          <p>{user.name}</p>
+          <p>{user.fullName}</p>
         </div>
       ))}
     </div>
@@ -326,6 +332,7 @@ const AddMemberApprove = () => {
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
         Danh sách nhà khoa học
       </h2>
+      <p style={{color: "red"}}>Lưu ý khi chọn thành viên đánh giá là số lẻ vd 3, 5, 7</p>
       <span
         style={{
           marginLeft: 8,
@@ -335,12 +342,12 @@ const AddMemberApprove = () => {
         {hasSelected ? (
           <div>
             <Space direction="" size={"middle"}>
-            <Popover content={listUser} title="Nhà khoa học đã chọn">
-            <Badge count={selectedUser.length}>
-              <GroupOutlined style={{ fontSize: "20px", color: "#08c" }} />
-            </Badge>
-            </Popover>
-            <p>Đã chọn {selectedUser.length} nhà khoa học</p>
+              <Popover content={listUser} title="Nhà khoa học đã chọn">
+                <Badge count={selectedUser.length}>
+                  <GroupOutlined style={{ fontSize: "20px", color: "#08c" }} />
+                </Badge>
+              </Popover>
+              <p>Đã chọn {selectedUser.length} nhà khoa học</p>
             </Space>
           </div>
         ) : (
@@ -357,7 +364,7 @@ const AddMemberApprove = () => {
             ...rowSelection,
           }}
           columns={columns}
-          dataSource={showFullData ? data : maskedData}
+          dataSource={showFullData ? user : maskedData}
           onChange={onChange}
           pagination={{
             current: current,
