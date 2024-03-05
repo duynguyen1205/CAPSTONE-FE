@@ -14,9 +14,6 @@ import "./table.scss";
 import ModalReject from "./ModalReject";
 import { getTopicReviewerAPI } from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
-  // truyền deanId vào để list ra đề tài
-  
-  
 const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -30,18 +27,6 @@ const ProjectManagerUser = () => {
   const [activeTab, setActiveTab] = useState("notyet");
   const userId = "9645623f-dec0-4741-be28-0baeb1590c8c";
   const navigate = useNavigate();
-  const[dataTopicForDean,setdataTopicForDean] =useState([]);
-
-  useEffect(()=> {
-    getTopicForDean({deanId:1})
-    .then((data)=>{
-      console.log(data);
-      if(data && data.length > 0){
-        setdataTopicForDean(data)
-      } 
-    })
-  },[]);
-
   useEffect(() => {
     getTopicReview(userId);
   }, [activeTab]);
@@ -57,7 +42,6 @@ const ProjectManagerUser = () => {
       children: <></>,
     },
   ];
-   console(log(dataTopicForDean));
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -147,98 +131,11 @@ const ProjectManagerUser = () => {
         text
       ),
   });
-
-  const handleOnClickApprove = (id)=>{
-    const param = {
-      topicId: id,
-      decision: true,
-      rejectReason: Null
-    }
-    createDeanMakeDecesion(param)
-    .then((data) =>{
-      console.log(data)
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
-  }
-  const dataSource = [
-    {
-      key: "1",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 32,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "2",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "3",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "4",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "5",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "6",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "7",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "8",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "9",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "10",
-      name: "Duy",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-  ];
   const columns = [
     {
       title: "ID",
       key: "index",
-      render: (_,record) =>  record.topicId,
+      render: (text, record, index) => index + 1,
       color: "red",
       width: "10%",
     },
@@ -253,7 +150,6 @@ const ProjectManagerUser = () => {
       title: "Lĩnh Vực",
       dataIndex: "field",
       key: "field",
-      render: (_,record, index) => record.categoryName,
     },
     {
       title: "Ngày",
@@ -291,7 +187,7 @@ const ProjectManagerUser = () => {
                   setDataUser(record);
                 }}
               />
-              <CheckOutlined onClick={()=> handleOnClickApprove(record.id)} style={style2} />
+              <CheckOutlined style={style2} />
               <CloseOutlined
                 style={style3}
                 onClick={() => {
@@ -316,7 +212,6 @@ const ProjectManagerUser = () => {
       console.error("Error get topic list:", error);
     }
   };
-
 
   const renderHeader = () => (
     <div>
@@ -364,8 +259,7 @@ const ProjectManagerUser = () => {
         }
         bordered={true}
         columns={columns}
-        dataSource={dataTopicForDean.map((items,index)=>({...items,key:index+1}))}
-        // dataSource={topic}
+        dataSource={topic}
         onChange={onChange}
         rowKey={"_id"}
         pagination={{

@@ -10,36 +10,43 @@ export const getAllUser = () => {
 };
 
 export const getAllCategory = () => {
-    return axios.get("/api/category");
+  return axios.get("/api/category");
 };
 // đề tài sơ duyệt
 export const getTopicReviewerAPI = (userId) => {
   return axios.get(`/api/topic/pre-topic-waiting-reviewer?memberId=${userId}`);
 };
 
-// upload file 
+// upload file
 export const uploadFile = (files) => {
   const bodyFormData = new FormData();
-  for (let i = 0 ; i < files.length ; i++) {
-    bodyFormData.append("images", files[i]);
-}
-  // bodyFormData.append("formFiles", files);
+  bodyFormData.append("formFiles", files);
   return axios({
     method: "post",
-    url: "api/topic/upload",
+    url: "/api/topic/upload",
     data: bodyFormData,
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
-}
-
+};
+// create a new topic
+export const createTopicAPI = (data) => {
+  return axios({
+    method: "post",
+    url: "/api/topic/create",
+    data: {...data},
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
 //  get topic for dean
 export const getTopicForDean = (param) => {
   return axios.get(`/api/topic/topic-for-dean?${qs.stringify(param)}`);
-}
+};
 
 // dean make decision
 export const createDeanMakeDecesion = (param) => {
-  return axios.post("/api/topic/dean-make-decision",param);
-}
+  return axios.post("/api/topic/dean-make-decision", param);
+};

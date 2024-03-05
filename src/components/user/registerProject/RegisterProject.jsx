@@ -22,11 +22,15 @@ import {
   InboxOutlined,
   MinusCircleOutlined,
   PlusOutlined,
-  SmileOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import ModalAddMember from "./ModalAddMember";
-import { getAllCategory, getAllUser, uploadFile } from "../../../services/api";
+import {
+  createTopicAPI,
+  getAllCategory,
+  getAllUser,
+  uploadFile,
+} from "../../../services/api";
 dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
 const { TextArea } = Input;
@@ -37,28 +41,14 @@ const RegisterProject = () => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState([]);
   const [listUser, setListUser] = useState([]);
-  const [fileList, setFileList] = useState([]);
+  const [newTopicFiles, setFileList] = useState([]);
   const showUserModal = () => {
     setOpen(true);
   };
   const hideUserModal = () => {
     setOpen(false);
   };
-  const onFinish = (values) => {
-    // chuyển trường email thành trường id
-    const user = values.users;
-    const emailToIdMap = {};
-    listUser.forEach((item) => {
-      emailToIdMap[item.email] = item.id;
-    });
-    const newData = user.map((item) => {
-      const userId = emailToIdMap[item.email];
-      const newItem = { userId, ...item };
-      delete newItem.email;
-      return newItem;
-    });
-    console.log("check values:", newData);
-  };
+
   const selectAfter = (
     <Select
       defaultValue={"VND"}
@@ -71,11 +61,6 @@ const RegisterProject = () => {
     </Select>
   );
   const [form] = Form.useForm();
-  const dummyRequest = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess("ok");
-    }, 1000);
-  };
   //props của upload
   const props = {
     name: "file",
@@ -87,22 +72,18 @@ const RegisterProject = () => {
         setFileList((fileList) => [
           ...fileList,
           {
-            topicFileName: response.data.fileName,
-            topicFileLink: response.data.fileLink,
+            topicFileName: response.data[0].fileName,
+            topicFileLink: response.data[0].fileLink,
           },
         ]);
-        console.log('====================================');
-        console.log('check fileList', response);
-        console.log('====================================');
         // Gọi onSuccess để xác nhận rằng tải lên đã thành công
         onSuccess(response, file);
-  
         // Hiển thị thông báo thành công
         message.success(`${file.name} file uploaded successfully.`);
       } catch (error) {
         // Gọi onError để thông báo lỗi nếu có vấn đề khi tải lên
         onError(error);
-  
+
         // Hiển thị thông báo lỗi
         message.error(`${file.name} file upload failed.`);
       }
@@ -127,7 +108,44 @@ const RegisterProject = () => {
     getUser();
     getCategory();
   }, []);
-
+  const onFinish = async (values) => {
+    // chuyển trường email thành trường id
+    const user = values.memberList;
+    const emailToIdMap = {};
+    listUser.forEach((item) => {
+      emailToIdMap[item.email] = item.id;
+    });
+    const newData = user.map((item) => {
+      const userId = emailToIdMap[item.email];
+      const newItem = { userId, ...item };
+      delete newItem.email;
+      newItem.role = Number(newItem.role);
+      return newItem;
+    });
+    const creatorId = "9645623f-dec0-4741-be28-0baeb1590c8c";
+    const {categoryId, topicName, description, budget } = values
+    const data = {
+      categoryId : categoryId,
+        creatorId: creatorId,
+        topicName: values.topicName,
+        description: values.description,
+        budget: values.budget.toString(),
+        memberList: newData,
+        newTopicFiles: newTopicFiles,
+    }
+    try {
+      const res = await createTopicAPI(data);
+      if(res) {
+        message.success("Tạo topic thành công")
+        setFileList([])
+        form.resetFields();
+        console.log("check kết quả trả về", res.message);
+      }
+    } catch (error) {
+      console.error("lỗi thêm mới topic", error);
+    }
+    console.log("check values:", newData);
+  };
   return (
     <>
       <h2
@@ -144,9 +162,9 @@ const RegisterProject = () => {
         onFormFinish={(name, { values, forms }) => {
           if (name === "userForm") {
             const { basicForm } = forms;
-            const users = basicForm.getFieldValue("users") || [];
+            const memberList = basicForm.getFieldValue("memberList") || [];
             basicForm.setFieldsValue({
-              users: [...users, values],
+              memberList: [...memberList, values],
             });
             setOpen(false);
           }
@@ -156,7 +174,7 @@ const RegisterProject = () => {
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
-                name="name"
+                name="topicName"
                 label="Tên đề tài"
                 rules={[
                   {
@@ -170,7 +188,7 @@ const RegisterProject = () => {
             </Col>
             <Col span={24}>
               <Form.Item
-                name="details"
+                name="description"
                 label="Chi tiết"
                 rules={[
                   {
@@ -189,7 +207,7 @@ const RegisterProject = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="money"
+                name="budget"
                 label="Kinh Phí Dự Kiến"
                 rules={[
                   {
@@ -203,7 +221,7 @@ const RegisterProject = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="field"
+                name="categoryId"
                 label="Lĩnh vực nghiên cứu"
                 rules={[
                   {
@@ -233,7 +251,7 @@ const RegisterProject = () => {
                 </Button>
               </Form.Item>
               {/* Create a hidden field to make Form instance record this */}
-              <Form.Item name="users" hidden />
+              <Form.Item name="memberList" hidden />
 
               <Form.Item
                 label="Thành viên"
@@ -243,14 +261,14 @@ const RegisterProject = () => {
                   },
                 ]}
                 shouldUpdate={(prevValues, curValues) =>
-                  prevValues.users !== curValues.users
+                  prevValues.memberList !== curValues.memberList
                 }
               >
                 {({ getFieldValue, setFieldsValue }) => {
-                  const users = getFieldValue("users") || [];
-                  return users.length ? (
+                  const memberList = getFieldValue("memberList") || [];
+                  return memberList.length ? (
                     <ul>
-                      {users.map((user, index) => (
+                      {memberList.map((user, index) => (
                         <li key={user.index} className="user">
                           <Space>
                             <Avatar icon={<UserOutlined />} />
@@ -259,9 +277,11 @@ const RegisterProject = () => {
                             } - ${user.taskDescription}`}
                             <CloseOutlined
                               onClick={() => {
-                                delete users[index];
-                                const updatedUsers = users.filter((u) => !!u);
-                                setFieldsValue({ users: updatedUsers });
+                                delete memberList[index];
+                                const updatedUsers = memberList.filter(
+                                  (u) => !!u
+                                );
+                                setFieldsValue({ memberList: updatedUsers });
                               }}
                               style={{ paddingLeft: 15 }}
                             />

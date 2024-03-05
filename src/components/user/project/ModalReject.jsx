@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, ConfigProvider, Form, Input, Modal, Row } from "antd";
+import { Button, Col, ConfigProvider, Form, Input, Modal, Row, message } from "antd";
+import { createDeanMakeDecesion } from "../../../services/api";
 const { TextArea } = Input;
 const ModalReject = (props) => {
   const [form] = Form.useForm();
   const [isSubmit, setIsSubmit] = useState(false);
   const data = props.data;
-  console.log(data);
   const handleOk = () => {
     form.submit();
   };
@@ -17,13 +17,14 @@ const ModalReject = (props) => {
   const onSubmit = async (values) => {
     console.log("check values: ", values);
     const param = {
-      topicId: data.id,
+      topicId: data.topicId,
       decision: false,
       rejectReason: values.comment
     }
     createDeanMakeDecesion(param)
     .then((data) =>{
-      console.log(data)
+      message.success("Tạo đánh giá thành công")
+      props.setStatus(true)
       handleCancel()
     })
     .catch((error)=>{
@@ -64,12 +65,12 @@ const ModalReject = (props) => {
         <Form form={form} name="basic" onFinish={onSubmit}>
           <Row gutter={20}>
             <Col span={24}>
-              <Form.Item name="key" label="ID đề tài" labelCol={{ span: 24 }}>
+              <Form.Item name="topicId" label="ID đề tài" labelCol={{ span: 24 }}>
                 <Input disabled />
               </Form.Item>
             </Col>
             <Col span={24}>
-              <Form.Item name="name" label="Tên đề tài" labelCol={{ span: 24 }}>
+              <Form.Item name="topicName" label="Tên đề tài" labelCol={{ span: 24 }}>
                 <Input disabled />
               </Form.Item>
             </Col>

@@ -5,13 +5,14 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Button, ConfigProvider, Input, Space, Table, Tabs } from "antd";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
 import ModalInfor from "./ModalInfor";
 import "./table.scss";
 import ModalReject from "./ModalReject";
+import { createDeanMakeDecesion, getTopicForDean } from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUserReview = () => {
   const [current, setCurrent] = useState(1);
@@ -22,6 +23,7 @@ const ProjectManagerUserReview = () => {
   const [isModalRejOpen, setIsModalRejOpen] = useState(false);
   const [data, setDataUser] = useState({});
   const [dataPro, setDataPro] = useState({});
+  const [status, setStatus] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
@@ -124,101 +126,49 @@ const ProjectManagerUserReview = () => {
         text
       ),
   });
-  const dataSource = [
-    {
-      key: "1",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 32,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "2",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "3",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "4",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "5",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "6",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "7",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "8",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "9",
-      name: "Nghiên cứu và phát triển công nghệ vi sinh học",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "10",
-      name: "Duy",
-      age: 42,
-      field: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-  ];
+  const handleOnClickApprove = (id) => {
+    const param = {
+      topicId: id,
+      decision: true,
+      rejectReason: null,
+    };
+    createDeanMakeDecesion(param)
+      .then((data) => {
+        if(status === true) {
+          setStatus(false)
+        }
+        else {
+          setStatus(true)
+        }
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const columns = [
     {
       title: "ID",
-      key: "index",
-      render: (text, record, index) => index + 1,
-      color: "red",
-      width: "10%",
+      key: "topicId",
+      dataIndex: "topicId",
+      width: "20%",
     },
     {
       title: "Tên Đề Tài",
-      dataIndex: "name",
+      dataIndex: "topicName",
       key: "name",
-      ...getColumnSearchProps("name"),
+      ...getColumnSearchProps("topicName"),
       width: "30%",
     },
     {
       title: "Lĩnh Vực",
-      dataIndex: "field",
+      dataIndex: "categoryName",
       key: "field",
+      render: (_, record, index) => record.categoryName,
     },
     {
       title: "Ngày",
-      dataIndex: "date",
+      dataIndex: "createdAt",
       key: "date",
     },
     {
@@ -252,7 +202,10 @@ const ProjectManagerUserReview = () => {
                   setDataUser(record);
                 }}
               />
-              <CheckOutlined style={style2} />
+              <CheckOutlined
+                onClick={() => handleOnClickApprove(record.topicId)}
+                style={style2}
+              />
               <CloseOutlined
                 style={style3}
                 onClick={() => {
@@ -272,13 +225,24 @@ const ProjectManagerUserReview = () => {
       <Tabs
         defaultActiveKey="notyet"
         items={items}
-        onChange={(value) => {
-          setSortQuery(value);
-        }}
+        onChange={(value) => {}}
         style={{ overflowX: "auto", marginLeft: "30px" }}
       />
     </div>
   );
+  const [dataTopicForDean, setdataTopicForDean] = useState([]);
+
+  const getTopicForDeanAPI = async () => {
+    const res = await getTopicForDean({
+      deanId: "98cf9047-0e51-4879-8cc9-3279fe2a0820",
+    });
+    if (res && res?.data) {
+      setdataTopicForDean(res.data);
+    }
+  };
+  useEffect(() => {
+    getTopicForDeanAPI();
+  }, [status]);
   //search
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -313,7 +277,7 @@ const ProjectManagerUserReview = () => {
         }
         bordered={true}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={dataTopicForDean}
         onChange={onChange}
         rowKey={"_id"}
         pagination={{
@@ -342,6 +306,7 @@ const ProjectManagerUserReview = () => {
         data={dataPro}
         isModalRejOpen={isModalRejOpen}
         setIsModalRejOpen={setIsModalRejOpen}
+        setStatus={setStatus}
       />
     </div>
   );
