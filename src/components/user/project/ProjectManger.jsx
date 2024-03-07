@@ -153,7 +153,7 @@ const ProjectManagerUser = () => {
     },
     {
       title: "Ngày",
-      dataIndex: "date",
+      dataIndex: "date", // DD/MM/YYYY
       key: "date",
     },
     {

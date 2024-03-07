@@ -12,6 +12,10 @@ import { useNavigate } from "react-router-dom";
 import ModalInfor from "./ModalInfor";
 import "./table.scss";
 import ModalReject from "./ModalReject";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
+const dateFormat = "DD/MM/YYYY";
 import { createDeanMakeDecesion, getTopicForDean } from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUserReview = () => {
@@ -24,15 +28,15 @@ const ProjectManagerUserReview = () => {
   const [data, setDataUser] = useState({});
   const [dataPro, setDataPro] = useState({});
   const [status, setStatus] = useState(false);
-  const navigate = useNavigate();
+  const [dataTopicForDean, setdataTopicForDean] = useState([]);
   const items = [
     {
-      key: "notyet",
+      key: "notpassyet",
       label: `Chưa thông qua`,
       children: <></>,
     },
     {
-      key: "chohoidong",
+      key: "passed",
       label: `Đã thông qua`,
       children: <></>,
     },
@@ -140,7 +144,6 @@ const ProjectManagerUserReview = () => {
         else {
           setStatus(true)
         }
-        console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -156,19 +159,22 @@ const ProjectManagerUserReview = () => {
     {
       title: "Tên Đề Tài",
       dataIndex: "topicName",
-      key: "name",
+      key: "topicName",
       ...getColumnSearchProps("topicName"),
       width: "30%",
     },
     {
       title: "Lĩnh Vực",
       dataIndex: "categoryName",
-      key: "field",
-      render: (_, record, index) => record.categoryName,
+      key: "categoryName",
     },
     {
       title: "Ngày",
-      dataIndex: "createdAt",
+      render: (text, record, index) => {
+        return (
+          <div>{dayjs(record.createdAt).format(dateFormat) }</div>
+        )
+      },
       key: "date",
     },
     {
@@ -220,17 +226,7 @@ const ProjectManagerUserReview = () => {
       align: "center",
     },
   ];
-  const renderHeader = () => (
-    <div>
-      <Tabs
-        defaultActiveKey="notyet"
-        items={items}
-        onChange={(value) => {}}
-        style={{ overflowX: "auto", marginLeft: "30px" }}
-      />
-    </div>
-  );
-  const [dataTopicForDean, setdataTopicForDean] = useState([]);
+  
 
   const getTopicForDeanAPI = async () => {
     const res = await getTopicForDean({
@@ -240,6 +236,31 @@ const ProjectManagerUserReview = () => {
       setdataTopicForDean(res.data);
     }
   };
+  const getTopicHadReviewed = async () => {
+    const res = await getTopicForDean({
+      deanId: "98cf9047-0e51-4879-8cc9-3279fe2a0820",
+    });
+    if (res && res?.data) {
+      setdataTopicForDean(res.data);
+    }
+  }
+  const renderHeader = () => (
+    <div>
+      <Tabs
+        defaultActiveKey="notpassyet"
+        items={items}
+        onChange={(value) => {
+          if (value === "notpassyet") {
+            getTopicForDeanAPI();
+          } else if (value === "pass") {
+            getTopicHadReviewed();
+          }
+        }}
+        style={{ overflowX: "auto", marginLeft: "30px" }}
+      />
+    </div>
+  );
+
   useEffect(() => {
     getTopicForDeanAPI();
   }, [status]);

@@ -13,163 +13,28 @@ import {
   Tabs,
   Tooltip,
 } from "antd";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "./project.scss";
 import { useNavigate } from "react-router-dom";
 import ModalInfor from "../../user/project/ModalInfor";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
+const dateFormat = "DD/MM/YYYY";
+import {
+  getTopicForCouncil,
+  getTopicForMemberApproval,
+} from "../../../services/api";
 const ProjectManager = () => {
-  //data để text
-  const dataSource = [
-    {
-      key: "1",
-      name: "Nghiên cứu hóa sinh về công nghệ mới ",
-      age: 32,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "2",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "3",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "4",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "5",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "6",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "7",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "8",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "9",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "10",
-      name: "Duy",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-  ];
-  const dataSource1 = [
-    {
-      key: "1",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 32,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "2",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "3",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "4",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "5",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "6",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "7",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "8",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "9",
-      name: "Nghiên cứu hóa sinh về công nghệ mới",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "10",
-      name: "Duy",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-  ];
+  //staff ID để text
+  const staffId = "2D5E2220-EEEF-4FDC-8C98-1B5C5012319C";
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [checkTab, setCheckTab] = useState("notyet");
-  const [data, setData] = useState(dataSource);
+  const [data, setData] = useState([]);
   const [dataPro, setDataPro] = useState({});
   const [isModalInforOpen, setIsModalInforOpen] = useState(false);
   const navigate = useNavigate();
@@ -190,7 +55,7 @@ const ProjectManager = () => {
       children: <></>,
     },
     {
-      key: "hoanthanh",
+      key: "bituchoi",
       label: `Bị từ chối`,
       children: <></>,
     },
@@ -289,25 +154,29 @@ const ProjectManager = () => {
     {
       title: "ID",
       key: "index",
-      render: (text, record, index) => index + 1,
+      dataIndex: "topicId",
+      // render: (text, record, index) => index + 1,
       width: "10%",
+      hidden: true,
     },
     {
       title: "Tên Đề Tài",
-      dataIndex: "name",
+      dataIndex: "topicName",
       key: "name",
       width: "30%",
-      ...getColumnSearchProps("name"),
+      ...getColumnSearchProps("topicName"),
     },
     {
       title: "Lĩnh Vực",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "categoryName",
+      key: "categoryName",
     },
     {
       title: "Ngày",
-      dataIndex: "date",
-      key: "date",
+      render: (text, record, index) => {
+        return <div>{dayjs(record.createdAt).format(dateFormat)}</div>;
+      },
+      key: "createdAt",
     },
     {
       title: "Hành động",
@@ -335,7 +204,7 @@ const ProjectManager = () => {
                       style={{ fontSize: "20px", color: "blue" }}
                       type="primary"
                       onClick={() => {
-                        navigate(`/staff/manager/add-member/${record.key}`);
+                        navigate(`/staff/manager/add-member/${record.topicId}`);
                       }}
                     />
                   </Tooltip>
@@ -361,6 +230,36 @@ const ProjectManager = () => {
       align: "center",
     },
   ];
+  const getTopicMemberApproval = async () => {
+    try {
+      const res = await getTopicForMemberApproval({
+        staffId: staffId,
+      });
+      if (res && res?.data) {
+        setData(res.data);
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicForMemberApproval: " + error);
+    }
+  };
+  const getTopicCoucil = async () => {
+    try {
+      const res = await getTopicForCouncil({
+        staffId: staffId,
+      });
+      if (res && res?.data) {
+        console.log("====================================");
+        console.log(res.data);
+        console.log("====================================");
+        setData(res.data);
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicForCouncil: " + error);
+    }
+  };
+  useEffect(() => {
+    getTopicMemberApproval();
+  }, []);
   const renderHeader = () => (
     <div>
       <Tabs
@@ -369,9 +268,9 @@ const ProjectManager = () => {
         onChange={(value) => {
           setCheckTab(value);
           if (value === "notyet") {
-            setData(dataSource);
+            getTopicMemberApproval();
           } else if (value === "chohoidong") {
-            setData(dataSource1);
+            getTopicCoucil();
           }
         }}
         style={{ overflowX: "auto", marginLeft: "30px" }}

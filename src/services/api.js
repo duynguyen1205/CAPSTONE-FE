@@ -35,7 +35,7 @@ export const createTopicAPI = (data) => {
   return axios({
     method: "post",
     url: "/api/topic/create",
-    data: {...data},
+    data: { ...data },
     headers: {
       "Content-Type": "application/json",
     },
@@ -50,3 +50,15 @@ export const getTopicForDean = (param) => {
 export const createDeanMakeDecesion = (param) => {
   return axios.post("/api/topic/dean-make-decision", param);
 };
+
+// get topic waiting for member approval
+export const getTopicForMemberApproval = (param) => {
+  console.log("check params: ", param);
+  return axios.get(`/api/topic/pre-topic-waiting-review-formation?${qs.stringify(param)}`);
+};
+
+// get topic waiting for member approval
+export const getTopicForCouncil = (param) => {
+  return axios.get(`api/topic/early-topic-waiting-council-formation?${qs.stringify(param)}`);
+};
+

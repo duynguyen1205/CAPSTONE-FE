@@ -182,6 +182,7 @@ const RegisterProject = () => {
                     message: "Xin hãy nhập tên đề tài",
                   },
                 ]}
+                labelCol={{span:24}}
               >
                 <Input />
               </Form.Item>
@@ -196,6 +197,7 @@ const RegisterProject = () => {
                     message: "Xin hãy nhập tóm tắt nội dung đề tài",
                   },
                 ]}
+                labelCol={{span:24}}
               >
                 <TextArea
                   autoSize={{
@@ -215,6 +217,7 @@ const RegisterProject = () => {
                     message: "Xin hãy nhập kinh phí dự kiến",
                   },
                 ]}
+                labelCol={{span:24}}
               >
                 <InputNumber addonAfter={selectAfter} />
               </Form.Item>
@@ -229,6 +232,7 @@ const RegisterProject = () => {
                     message: "Xin hãy chọn lĩnh vực nghiên cứu",
                   },
                 ]}
+                labelCol={{span:24}}
               >
                 <Select
                   style={{ width: 150 }}
@@ -398,7 +402,7 @@ const RegisterProject = () => {
                   span: 12,
                 }}
               >
-                <Dragger {...props} style={{ width: 300, height: 300 }}>
+                <Upload.Dragger {...props} style={{ width: 300, height: 300 }}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
@@ -409,7 +413,7 @@ const RegisterProject = () => {
                     Hỗ trợ tải lên một lần hoặc hàng loạt. Vui lòng để tên file
                     là tiếng việt không dấu
                   </p>
-                </Dragger>
+                </Upload.Dragger>
               </Form.Item>
 
               <Form.Item>

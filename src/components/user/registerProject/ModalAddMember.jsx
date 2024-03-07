@@ -30,7 +30,7 @@ const ModalAddMember = ({ open, onCancel, data }) => {
 
   return (
     <Modal
-      title="Thêm nhân viên"
+      title="Thêm thành viên"
       open={open}
       onOk={onOk}
       onCancel={onCancel}
