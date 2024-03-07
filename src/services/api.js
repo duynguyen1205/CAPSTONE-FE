@@ -6,7 +6,7 @@ import qs from "query-string";
 // get all user
 
 export const getAllUser = () => {
-  return axios.get("/api/user");
+  return axios.get("/api/user/all");
 };
 
 export const getAllCategory = () => {
@@ -53,7 +53,6 @@ export const createDeanMakeDecesion = (param) => {
 
 // get topic waiting for member approval
 export const getTopicForMemberApproval = (param) => {
-  console.log("check params: ", param);
   return axios.get(`/api/topic/pre-topic-waiting-review-formation?${qs.stringify(param)}`);
 };
 

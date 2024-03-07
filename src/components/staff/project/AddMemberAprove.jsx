@@ -32,6 +32,15 @@ const AddMemberApprove = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [showFullData, setShowFullData] = useState({});
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [maxSelectedMembers, setMaxSelectedMembers] = useState();
+  const isRowDisabled = (record) => {
+    // Check if the row should be disabled based on the number of selected members
+    return (
+      selectedKeys.length >= maxSelectedMembers &&
+      !selectedKeys.includes(record.key)
+    );
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -153,14 +162,14 @@ const AddMemberApprove = () => {
     },
     {
       title: "Email",
-      dataIndex: "email",
+      dataIndex: "accountEmail",
       key: "email",
       render: (text, record) => (
         <Space>
           {showFullData[record.key] ? (
-            <p>{record.email}</p>
+            <p>{record.accountEmail}</p>
           ) : (
-            <p>{maskEmail(record.email, false)}</p>
+            <p>{maskEmail(record.accountEmail, false)}</p>
           )}
         </Space>
       ),
@@ -227,9 +236,10 @@ const AddMemberApprove = () => {
   // xử lý hội đồng đánh giá
   const onSubmitCouncil = () => {};
   // hide email and phone munber
-  const maskEmail = (email) => {
-    const [username, domain] = email.split("@");
+  const maskEmail = (accountEmail) => {
+    const [username, domain] = accountEmail.split("@");
     const maskedUsername = `${username.substring(0, 3)}****`;
+
     return `${maskedUsername}@${domain}`;
   };
 
@@ -242,7 +252,7 @@ const AddMemberApprove = () => {
   const maskData = (user, showFull) => {
     return user.map((item) => ({
       ...item,
-      email: maskEmail(item.email, showFull),
+      accountEmail: maskEmail(item.accountEmail, showFull),
       phoneNumber: maskPhoneNumber(item.phoneNumber, showFull),
     }));
   };
@@ -257,9 +267,15 @@ const AddMemberApprove = () => {
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
+      // Update the selected row keys
+      setSelectedKeys(selectedRowKeys);
       setSelectedUser(selectedRows);
     },
     hideSelectAll: true,
+    selectedKeys,
+    getCheckboxProps: (record) => ({
+      disabled: isRowDisabled(record),
+    }),
   };
   const hasSelected = selectedUser.length > 0;
   const onChange = (pagination, filters, sorter, extra) => {
@@ -292,8 +308,9 @@ const AddMemberApprove = () => {
         >
           {" "}
           {path === "add-council" && (
+            setMaxSelectedMembers(7),
             <Button
-              disabled={hasSelected < 1 || selectedUser.length % 2 === 0 }
+              disabled={hasSelected < 1 || selectedUser.length % 2 === 0}
               shape="round"
               type="primary"
               onClick={() => {
@@ -305,6 +322,7 @@ const AddMemberApprove = () => {
             </Button>
           )}
           {path === "add-member" && (
+             setMaxSelectedMembers(5),
             <Button
               disabled={hasSelected < 1 || selectedUser.length % 2 === 0}
               shape="round"
@@ -332,7 +350,9 @@ const AddMemberApprove = () => {
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
         Danh sách nhà khoa học
       </h2>
-      <p style={{color: "red"}}>Lưu ý khi chọn thành viên đánh giá là số lẻ vd 3, 5, 7</p>
+      <p style={{ color: "red" }}>
+        Lưu ý khi chọn thành viên đánh giá là số lẻ vd 3, 5, 7
+      </p>
       <span
         style={{
           marginLeft: 8,
