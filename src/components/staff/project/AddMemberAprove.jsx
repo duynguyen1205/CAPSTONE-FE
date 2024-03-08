@@ -4,6 +4,7 @@ import {
   Button,
   ConfigProvider,
   Input,
+  List,
   Popover,
   Space,
   Table,
@@ -341,11 +342,15 @@ const AddMemberApprove = () => {
   );
   const listUser = (
     <div>
-      {selectedUser.map((user) => (
-        <div key={user.id}>
-          <p>{user.fullName}</p>
-        </div>
-      ))}
+      <List
+        bordered
+        dataSource={selectedUser}
+        renderItem={(selectedUser) => (
+          <List.Item>
+            {selectedUser.fullName} - {selectedUser.position}
+          </List.Item>
+        )}
+      />
     </div>
   );
   return (
