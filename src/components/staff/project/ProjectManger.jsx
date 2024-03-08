@@ -248,9 +248,6 @@ const ProjectManager = () => {
         staffId: staffId,
       });
       if (res && res?.data) {
-        console.log("====================================");
-        console.log(res.data);
-        console.log("====================================");
         setData(res.data);
       }
     } catch (error) {

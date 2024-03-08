@@ -20,6 +20,7 @@ import {
 } from "@ant-design/icons";
 import ModalPickTimeLeader from "./ModalPickTimeLeader";
 import { getAllUser } from "../../../services/api";
+import ModalPickTime from "./ModalPickTime";
 const AddMemberApprove = () => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [user, setUser] = useState([]);
@@ -34,6 +35,7 @@ const AddMemberApprove = () => {
   const [showFullData, setShowFullData] = useState({});
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [maxSelectedMembers, setMaxSelectedMembers] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
   const isRowDisabled = (record) => {
     // Check if the row should be disabled based on the number of selected members
     return (
@@ -229,9 +231,8 @@ const AddMemberApprove = () => {
 
   // xử lý hội đồng sơ duyệt
   const onSubmit = () => {
-
     // Ví dụ: Hiển thị thông báo thành công
-    message.success("Thêm thành viên phê duyệt thành công");
+    setModalVisible(true)
   };
   // xử lý hội đồng đánh giá
   const onSubmitCouncil = () => {};
@@ -307,31 +308,33 @@ const AddMemberApprove = () => {
           }}
         >
           {" "}
-          {path === "add-council" && (
-            setMaxSelectedMembers(7),
-            <Button
-              disabled={hasSelected < 1 || selectedUser.length % 2 === 0}
-              shape="round"
-              type="primary"
-              onClick={() => {
-                onSubmitCouncil();
-                setIsModalOpen(true);
-              }}
-            >
-              Thêm thành viên đánh giá
-            </Button>
-          )}
-          {path === "add-member" && (
-             setMaxSelectedMembers(5),
-            <Button
-              disabled={hasSelected < 1 || selectedUser.length % 2 === 0}
-              shape="round"
-              type="primary"
-              onClick={onSubmit}
-            >
-              Thêm thành viên phê duyệt
-            </Button>
-          )}
+          {path === "add-council" &&
+            (setMaxSelectedMembers(7),
+            (
+              <Button
+                disabled={selectedUser.length < 2 || selectedUser.length % 2 === 0}
+                shape="round"
+                type="primary"
+                onClick={() => {
+                  onSubmitCouncil();
+                  setIsModalOpen(true);
+                }}
+              >
+                Thêm thành viên đánh giá
+              </Button>
+            ))}
+          {path === "add-member" &&
+            (setMaxSelectedMembers(5),
+            (
+              <Button
+                disabled={selectedUser.length < 2 || selectedUser.length % 2 === 0}
+                shape="round"
+                type="primary"
+                onClick={onSubmit}
+              >
+                Thêm thành viên phê duyệt
+              </Button>
+            ))}
         </ConfigProvider>
       </Space>
     </div>
@@ -409,6 +412,13 @@ const AddMemberApprove = () => {
       <ModalPickTimeLeader
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+      />
+
+      {/* modal pick time for member approval */}
+      <ModalPickTime
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        dataUser={selectedUser}
       />
     </div>
   );
