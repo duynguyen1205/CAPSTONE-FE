@@ -65,3 +65,9 @@ export const getTopicForCouncil = (param) => {
 export const memberReviewAPI = (data) => {
   return axios.post("/api/memberreview/add-reviewer", data);
 }
+
+// tạo hội đồng
+
+export const councilConfig = (data) => {
+  return axios.post("/api/review/config", data);
+};

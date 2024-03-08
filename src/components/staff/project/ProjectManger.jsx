@@ -215,7 +215,7 @@ const ProjectManager = () => {
                       style={{ fontSize: "20px", color: "blue" }}
                       type="primary"
                       onClick={() => {
-                        navigate(`/staff/manager/add-council/${record.key}`);
+                        navigate(`/staff/manager/add-council/${record.topicId}`);
                       }}
                     >
                       Gửi hội đồng

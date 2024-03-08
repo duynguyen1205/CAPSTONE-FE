@@ -417,6 +417,7 @@ const AddMemberApprove = () => {
       <ModalPickTimeLeader
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        dataUser={selectedUser}
       />
 
       {/* modal pick time for member approval */}
