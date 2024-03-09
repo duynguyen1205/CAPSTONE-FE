@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
-import { createDeanMakeDecesion, getTopicForDean } from "../../../services/api";
+import { createDeanMakeDecesion, getTopicForDean, viewDeanDecesion } from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUserReview = () => {
   const [current, setCurrent] = useState(1);
@@ -230,15 +230,15 @@ const ProjectManagerUserReview = () => {
 
   const getTopicForDeanAPI = async () => {
     const res = await getTopicForDean({
-      deanId: "98cf9047-0e51-4879-8cc9-3279fe2a0820",
+      deanId: "1850c91a-9602-4b2b-9c70-052307f74990",
     });
     if (res && res?.data) {
       setdataTopicForDean(res.data);
     }
   };
   const getTopicHadReviewed = async () => {
-    const res = await getTopicForDean({
-      deanId: "98cf9047-0e51-4879-8cc9-3279fe2a0820",
+    const res = await viewDeanDecesion({
+      deanId: "1850c91a-9602-4b2b-9c70-052307f74990",
     });
     if (res && res?.data) {
       setdataTopicForDean(res.data);

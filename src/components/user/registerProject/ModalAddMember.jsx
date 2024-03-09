@@ -3,8 +3,8 @@ import { Col, Form, Input, AutoComplete, Modal, Row, Select } from "antd";
 const { TextArea } = Input;
 const ModalAddMember = ({ open, onCancel, data }) => {
   const options = data.map((user) => ({
-    value: user.email,
-    label: user.email, // Hiển thị tên người dùng
+    value: user.accountEmail,
+    label: user.accountEmail, // Hiển thị email
   }));
   // reset form fields when modal is form, closed
   const useResetFormOnCloseModal = ({ form, open }) => {
@@ -42,8 +42,8 @@ const ModalAddMember = ({ open, onCancel, data }) => {
           <Col span={15}>
             {" "}
             <Form.Item
-              name="email"
-              label="Họ và tên"
+              name="accountEmail"
+              label="Email"
               rules={[
                 {
                   required: true,

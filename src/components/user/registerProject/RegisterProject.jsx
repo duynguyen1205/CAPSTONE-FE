@@ -276,7 +276,7 @@ const RegisterProject = () => {
                         <li key={user.index} className="user">
                           <Space>
                             <Avatar icon={<UserOutlined />} />
-                            {`${user.email} - ${
+                            {`${user.accountEmail} - ${
                               user.role === 1 ? "Thành viên" : "Thư kí"
                             } - ${user.taskDescription}`}
                             <CloseOutlined
