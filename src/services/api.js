@@ -72,8 +72,13 @@ export const memberReviewAPI = (data) => {
   return axios.post("/api/memberreview/add-reviewer", data);
 }
 
-// tạo hội đồng
+// create council
 
 export const councilConfig = (data) => {
   return axios.post("/api/review/config", data);
+};
+
+// getDetail topic
+export const getTopicDetailAPI = (param) => {
+  return axios.get(`/api/topic/detail?${qs.stringify(param)}`)
 };

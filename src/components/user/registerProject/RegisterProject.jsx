@@ -122,14 +122,14 @@ const RegisterProject = () => {
       newItem.role = Number(newItem.role);
       return newItem;
     });
-    const creatorId = "9645623f-dec0-4741-be28-0baeb1590c8c";
+    const creatorId = "a813f937-8c3a-40e8-b39e-7b1e0dd962f7"; // Ngô Minh G
     const {categoryId, topicName, description, budget } = values
     const data = {
       categoryId : categoryId,
         creatorId: creatorId,
-        topicName: values.topicName,
-        description: values.description,
-        budget: values.budget.toString(),
+        topicName: topicName,
+        description: description,
+        budget: budget.toString(),
         memberList: newData,
         newTopicFiles: newTopicFiles,
     }
@@ -235,7 +235,7 @@ const RegisterProject = () => {
                 labelCol={{span:24}}
               >
                 <Select
-                  style={{ width: 150 }}
+                  style={{ width: 200 }}
                   options={category.map((item) => ({
                     value: item.categoryId,
                     label: item.categoryName,

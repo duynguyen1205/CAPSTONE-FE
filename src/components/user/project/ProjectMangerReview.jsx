@@ -153,8 +153,8 @@ const ProjectManagerUserReview = () => {
     {
       title: "ID",
       key: "topicId",
-      dataIndex: "topicId",
-      width: "20%",
+      dataIndex: "code",
+      width: "10%",
     },
     {
       title: "Tên Đề Tài",
@@ -230,7 +230,7 @@ const ProjectManagerUserReview = () => {
 
   const getTopicForDeanAPI = async () => {
     const res = await getTopicForDean({
-      deanId: "1850c91a-9602-4b2b-9c70-052307f74990",
+      deanId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87", // Nguyen Van A
     });
     if (res && res?.data) {
       setdataTopicForDean(res.data);
@@ -238,7 +238,7 @@ const ProjectManagerUserReview = () => {
   };
   const getTopicHadReviewed = async () => {
     const res = await viewDeanDecesion({
-      deanId: "1850c91a-9602-4b2b-9c70-052307f74990",
+      deanId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87", // Nguyen Van A
     });
     if (res && res?.data) {
       setdataTopicForDean(res.data);
