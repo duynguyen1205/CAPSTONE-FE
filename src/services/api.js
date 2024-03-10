@@ -13,10 +13,12 @@ export const getAllCategory = () => {
   return axios.get("/api/category");
 };
 // đề tài sơ duyệt
-export const getTopicReviewerAPI = (userId) => {
-  return axios.get(`/api/topic/pre-topic-waiting-reviewer?memberId=${userId}`);
+export const getTopicReviewerAPI = (param) => {
+  return axios.get(`/api/topic/pre-topic-waiting-reviewer?${qs.stringify(param)}`);
 };
-
+export const createMemberDecision = (param) => {
+  return axios.post("/api/memberreview/make-decision", param);
+};
 // upload file
 export const uploadFile = (files) => {
   const bodyFormData = new FormData();

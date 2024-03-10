@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ModalInfor from "./ModalInfor";
 import "./table.scss";
 import ModalReject from "./ModalReject";
-import { getTopicReviewerAPI } from "../../../services/api";
+import { getTopicReviewerAPI, createMemberDecision} from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
@@ -26,9 +26,10 @@ const ProjectManagerUser = () => {
   const [topic, setTopic] = useState([]);
   const [activeTab, setActiveTab] = useState("notyet");
   const userId = "9645623f-dec0-4741-be28-0baeb1590c8c";
+  const [dataTopicForMember, setdataTopicForMember] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    getTopicReview(userId);
+    getTopicReviewer(userId);
   }, [activeTab]);
   const items = [
     {
@@ -42,6 +43,14 @@ const ProjectManagerUser = () => {
       children: <></>,
     },
   ];
+  const getTopicReviewer = async () => {
+    const res = await getTopicReviewerAPI({
+      userId: "9645623f-dec0-4741-be28-0baeb1590c8c", // Nguyen Van A
+    });
+    if (res && res?.data) {
+      setdataTopicForMember(res.data);
+    }
+  };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -131,6 +140,27 @@ const ProjectManagerUser = () => {
         text
       ),
   });
+  const handleOnClickApprove = (id) => {
+    const param = {
+      userId: "9645623f-EEB2-4E03-BC8D-1689D5FB3D87",
+      topicId: id,
+      decision: true,
+      rejectReason: null,
+    };
+    createMemberDecision(param)
+      .then((data) => {
+        console.log(data);
+        if(activeTab === true) {
+          setStatus(false)
+        }
+        else {
+          setStatus(true)
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const columns = [
     {
       title: "ID",
@@ -187,7 +217,10 @@ const ProjectManagerUser = () => {
                   setDataUser(record);
                 }}
               />
-              <CheckOutlined style={style2} />
+              <CheckOutlined
+                onClick={() => handleOnClickApprove(record.topicId)}
+                style={style2}
+              />
               <CloseOutlined
                 style={style3}
                 onClick={() => {
@@ -202,6 +235,7 @@ const ProjectManagerUser = () => {
       align: "center",
     },
   ];
+  
   const getTopicReview = async (ID) => {
     try {
       const res = await getTopicReviewerAPI(ID);
@@ -259,7 +293,7 @@ const ProjectManagerUser = () => {
         }
         bordered={true}
         columns={columns}
-        dataSource={topic}
+        dataSource={dataTopicForMember}
         onChange={onChange}
         rowKey={"_id"}
         pagination={{

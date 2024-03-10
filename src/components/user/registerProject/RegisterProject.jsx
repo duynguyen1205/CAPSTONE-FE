@@ -42,12 +42,15 @@ const RegisterProject = () => {
   const [category, setCategory] = useState([]);
   const [listUser, setListUser] = useState([]);
   const [newTopicFiles, setFileList] = useState([]);
+  const [addMember, setAddMember] = useState([]);
   const showUserModal = () => {
     setOpen(true);
   };
   const hideUserModal = () => {
     setOpen(false);
   };
+
+  console.log("check ssss",addMember)
 
   const selectAfter = (
     <Select
@@ -110,10 +113,10 @@ const RegisterProject = () => {
   }, []);
   const onFinish = async (values) => {
     // chuyển trường email thành trường id
-    const user = values.memberList;
+    const user = addMember;
     const emailToIdMap = {};
     listUser.forEach((item) => {
-      emailToIdMap[item.email] = item.id;
+      emailToIdMap[item.accountEmail] = item.id;
     });
     const newData = user.map((item) => {
       const userId = emailToIdMap[item.email];
@@ -122,6 +125,7 @@ const RegisterProject = () => {
       newItem.role = Number(newItem.role);
       return newItem;
     });
+    console.log("newdata",newData);
     const creatorId = "a813f937-8c3a-40e8-b39e-7b1e0dd962f7"; // Ngô Minh G
     const {categoryId, topicName, description, budget } = values
     const data = {
@@ -133,6 +137,7 @@ const RegisterProject = () => {
         memberList: newData,
         newTopicFiles: newTopicFiles,
     }
+    console.log("sooooo",data);
     try {
       const res = await createTopicAPI(data);
       if(res) {
@@ -438,7 +443,7 @@ const RegisterProject = () => {
         </Form>
 
         {/* modal thêm người dùng */}
-        <ModalAddMember open={open} onCancel={hideUserModal} data={listUser} />
+        <ModalAddMember open={open} onCancel={hideUserModal} data={listUser} setAddMember={setAddMember} />
       </Form.Provider>
     </>
   );
