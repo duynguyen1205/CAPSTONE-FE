@@ -49,6 +49,8 @@ const ProjectManagerUser = () => {
     });
     if (res && res?.data) {
       setdataTopicForMember(res.data);
+    }else{
+      console.log("ko load dc api");
     }
   };
   const getColumnSearchProps = (dataIndex) => ({
