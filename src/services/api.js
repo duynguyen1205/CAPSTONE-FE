@@ -54,7 +54,7 @@ export const createDeanMakeDecesion = (param) => {
 //dean view history decision
 
 export const viewDeanDecesion = (param) => {
-  return axios.get(`api/topic/topic-decided-by-dean${qs.stringify(param)}`);
+  return axios.get(`api/topic/topic-decided-by-dean?${qs.stringify(param)}`);
 };
 
 // get topic waiting for member approval

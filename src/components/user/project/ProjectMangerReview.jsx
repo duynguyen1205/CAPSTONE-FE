@@ -132,12 +132,14 @@ const ProjectManagerUserReview = () => {
   });
   const handleOnClickApprove = (id) => {
     const param = {
+      diciderId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87",
       topicId: id,
       decision: true,
       rejectReason: null,
     };
     createDeanMakeDecesion(param)
       .then((data) => {
+        console.log(data);
         if(status === true) {
           setStatus(false)
         }
@@ -241,6 +243,7 @@ const ProjectManagerUserReview = () => {
       deanId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87", // Nguyen Van A
     });
     if (res && res?.data) {
+      console.log(res.data);
       setdataTopicForDean(res.data);
     }
   }
@@ -252,7 +255,7 @@ const ProjectManagerUserReview = () => {
         onChange={(value) => {
           if (value === "notpassyet") {
             getTopicForDeanAPI();
-          } else if (value === "pass") {
+          } else if (value === "passed") {
             getTopicHadReviewed();
           }
         }}
