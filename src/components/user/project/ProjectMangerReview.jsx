@@ -139,7 +139,7 @@ const ProjectManagerUserReview = () => {
     const param = {
       diciderId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87",
       topicId: id,
-      decision: true,
+      deanDecision: true,
       rejectReason: null,
     };
     createDeanMakeDecesion(param)

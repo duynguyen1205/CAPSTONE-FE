@@ -19,7 +19,7 @@ const ModalReject = (props) => {
     const param = {
       diciderId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87",
       topicId: data.topicId,
-      decision: false,
+      deanDecision: false,
       rejectReason: values.comment
     }
     createDeanMakeDecesion(param)
