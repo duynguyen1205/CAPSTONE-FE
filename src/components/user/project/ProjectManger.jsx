@@ -27,7 +27,6 @@ const ProjectManagerUser = () => {
   const [activeTab, setActiveTab] = useState("notyet");
   const userId = "9645623f-dec0-4741-be28-0baeb1590c8c";
   const [dataTopicForMember, setdataTopicForMember] = useState([]);
-  const navigate = useNavigate();
   useEffect(() => {
     getTopicReviewer(userId);
   }, [activeTab]);
@@ -151,7 +150,6 @@ const ProjectManagerUser = () => {
     };
     createMemberDecision(param)
       .then((data) => {
-        console.log(data);
         if(activeTab === true) {
           setStatus(false)
         }
@@ -238,17 +236,6 @@ const ProjectManagerUser = () => {
     },
   ];
   
-  const getTopicReview = async (ID) => {
-    try {
-      const res = await getTopicReviewerAPI(ID);
-      if (res && res?.data) {
-        setTopic(res.data);
-      }
-    } catch (error) {
-      console.error("Error get topic list:", error);
-    }
-  };
-
   const renderHeader = () => (
     <div>
       <Tabs

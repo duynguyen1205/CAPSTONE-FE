@@ -49,7 +49,7 @@ const ModalPickTime = ({ visible, onCancel, dataUser }) => {
       cancelText={"Chỉnh sửa thông tin"}
       onOk={submit}
       forceRender={false}
-      maskClosable
+      maskClosable={false}
     >
       <List
         header={<div>Danh sách thành viên phê duyệt</div>}

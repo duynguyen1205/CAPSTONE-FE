@@ -16,7 +16,11 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
-import { createDeanMakeDecesion, getTopicForDean, viewDeanDecesion } from "../../../services/api";
+import {
+  createDeanMakeDecesion,
+  getTopicForDean,
+  viewDeanDecesion,
+} from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUserReview = () => {
   const [current, setCurrent] = useState(1);
@@ -29,6 +33,7 @@ const ProjectManagerUserReview = () => {
   const [dataPro, setDataPro] = useState({});
   const [status, setStatus] = useState(false);
   const [dataTopicForDean, setdataTopicForDean] = useState([]);
+  const [currentTab, setCurrentTab] = useState("");
   const items = [
     {
       key: "notpassyet",
@@ -139,12 +144,10 @@ const ProjectManagerUserReview = () => {
     };
     createDeanMakeDecesion(param)
       .then((data) => {
-        console.log(data);
-        if(status === true) {
-          setStatus(false)
-        }
-        else {
-          setStatus(true)
+        if (status === true) {
+          setStatus(false);
+        } else {
+          setStatus(true);
         }
       })
       .catch((error) => {
@@ -173,9 +176,7 @@ const ProjectManagerUserReview = () => {
     {
       title: "Ngày",
       render: (text, record, index) => {
-        return (
-          <div>{dayjs(record.createdAt).format(dateFormat) }</div>
-        )
+        return <div>{dayjs(record.createdAt).format(dateFormat)}</div>;
       },
       key: "date",
     },
@@ -202,7 +203,7 @@ const ProjectManagerUserReview = () => {
         };
         return (
           <div>
-            <Space size={"middle"}>
+            <Space size={"middle"} >
               <InfoCircleOutlined
                 style={style1}
                 onClick={() => {
@@ -210,17 +211,38 @@ const ProjectManagerUserReview = () => {
                   setDataUser(record);
                 }}
               />
-              <CheckOutlined
-                onClick={() => handleOnClickApprove(record.topicId)}
-                style={style2}
-              />
-              <CloseOutlined
-                style={style3}
-                onClick={() => {
-                  setDataPro(record);
-                  setIsModalRejOpen(true);
-                }}
-              />
+              {currentTab == "passed" && (
+                <>
+                  <p
+                    style={{
+                      backgroundColor: record.deanDecision ? "green" : "red",
+                      color: "white",
+                      display: "inline-block",
+                      padding: "5px 10px",
+                      borderRadius: "5px",
+                      marginTop: "8px",
+                    }}
+                  >
+                    {record.deanDecision ? "Đồng ý" : "Từ chối"}
+                  </p>
+                </>
+              )}
+
+              {currentTab == "notpassyet" && (
+                <>
+                  <CheckOutlined
+                    onClick={() => handleOnClickApprove(record.topicId)}
+                    style={style2}
+                  />
+                  <CloseOutlined
+                    style={style3}
+                    onClick={() => {
+                      setDataPro(record);
+                      setIsModalRejOpen(true);
+                    }}
+                  />
+                </>
+              )}
             </Space>
           </div>
         );
@@ -228,7 +250,6 @@ const ProjectManagerUserReview = () => {
       align: "center",
     },
   ];
-  
 
   const getTopicForDeanAPI = async () => {
     const res = await getTopicForDean({
@@ -246,13 +267,14 @@ const ProjectManagerUserReview = () => {
       console.log(res.data);
       setdataTopicForDean(res.data);
     }
-  }
+  };
   const renderHeader = () => (
     <div>
       <Tabs
         defaultActiveKey="notpassyet"
         items={items}
         onChange={(value) => {
+          setCurrentTab(value);
           if (value === "notpassyet") {
             getTopicForDeanAPI();
           } else if (value === "passed") {
