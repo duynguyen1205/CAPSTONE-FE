@@ -19,13 +19,26 @@ export const getTopicReviewerAPI = (param) => {
 export const createMemberDecision = (param) => {
   return axios.post("/api/memberreview/make-decision", param);
 };
-// upload file
+// upload file return link and name
 export const uploadFile = (files) => {
   const bodyFormData = new FormData();
   bodyFormData.append("formFiles", files);
   return axios({
     method: "post",
-    url: "/api/topic/upload",
+    url: "/api/uploadfile/multiple",
+    data: bodyFormData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const uploadFileSingle = (file) => {
+  const bodyFormData = new FormData();
+  bodyFormData.append("formFile", file);
+  return axios({
+    method: "post",
+    url: "/api/uploadfile/single",
     data: bodyFormData,
     headers: {
       "Content-Type": "multipart/form-data",
@@ -83,4 +96,29 @@ export const councilConfig = (data) => {
 // getDetail topic
 export const getTopicDetailAPI = (param) => {
   return axios.get(`/api/topic/detail?${qs.stringify(param)}`)
+};
+
+// get topic waiting for member review approval
+export const getTopicWaitingMember = (param) => {
+  return axios.get(`api/topic/pre-topic-waiting-review-for-staff?${qs.stringify(param)}`)
+};
+
+//get topic waiting for upload resullts after meeting 
+export const getTopicUploadDoc = (param) => {
+  return axios.get(`api/topic/early-topic-waiting-council-metting?${qs.stringify(param)}`)
+};
+
+//get topic waiting for upload contract 
+
+export const getTopicUploadContract = (param) => {
+  return axios.get(`api/topic/early-topic-waiting-upload-contract?${qs.stringify(param)}`)
+}
+
+// upload contract result for topic
+export const uploadResult = (data) => {
+  return axios.post("/api/review/update-meeting-result", data);
+};
+// upload contract contract for topic
+export const uploadContract= (data) => {
+  return axios.post("/api/contract/upload-early-contract", data);
 };

@@ -4,12 +4,20 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import { Button, ConfigProvider, Input, Space, Table, Tabs, Tag } from "antd";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "./project.scss";
-import { useNavigate } from "react-router-dom";
 import ModalUpload from "./ModalUpload";
 import ModalInfor from "../../user/project/ModalInfor";
+import {
+  getTopicUploadContract,
+  getTopicUploadDoc,
+} from "../../../services/api";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import ModalUploadContract from "./ModalUploadContract";
+dayjs.extend(customParseFormat);
+const dateFormat = "DD/MM/YYYY";
 const UploadDocument = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -19,16 +27,43 @@ const UploadDocument = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dataPro, setDataPro] = useState({});
   const [isModalInforOpen, setIsModalInforOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isModalContractOpen, setIsModalContractOpen] = useState(false);
+  const [dataTopic, setDataTopic] = useState([]);
+  const [checkTab, setCheckTab] = useState("confirm")
+  const staffId = "2D5E2220-EEEF-4FDC-8C98-1B5C5012319C";
+  const getTopicUpload = async () => {
+    try {
+      const res = await getTopicUploadDoc({
+        staffId: staffId,
+      });
+      if (res && res.isSuccess) {
+        setDataTopic(res.data);
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicUpload: ", error.message);
+    }
+  };
+  const getTopicUploadCont = async () => {
+    try {
+      const res = await getTopicUploadContract({
+        staffId: staffId,
+      });
+      if (res && res.isSuccess) {
+        setDataTopic(res.data);
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicUpload: ", error.message);
+    }
+  };
   const items = [
     {
       key: "confirm",
-      label: `Chờ xác nhận`,
+      label: `Chờ biên bản`,
       children: <></>,
     },
     {
       key: "submitted",
-      label: `Đã nộp`,
+      label: `Chờ hợp đồng`,
       children: <></>,
     },
   ];
@@ -121,101 +156,31 @@ const UploadDocument = () => {
         text
       ),
   });
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "Nghiên cứu bệnh lý",
-      date: "03-04-2024",
-    },
-    {
-      key: "3",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "4",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "5",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "6",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "7",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "8",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "9",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-    {
-      key: "10",
-      name: "Duy",
-      age: 42,
-      address: "10 Downing Street",
-      date: "03-04-2024",
-    },
-  ];
   const columns = [
     {
       title: "Id",
       key: "index",
-      render: (text, record, index) => index + 1,
+      dataIndex: "code",
       width: "10%",
     },
     {
       title: "Tên Đề Tài",
-      dataIndex: "name",
-      key: "name",
-      ...getColumnSearchProps("name"),
+      dataIndex: "topicName",
+      key: "topicName",
+      ...getColumnSearchProps("topicName"),
       width: "30%",
     },
     {
       title: "Lĩnh Vực",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "categoryName",
+      key: "categoryName",
     },
     {
-      title: "Ngày",
-      dataIndex: "date",
-      key: "date",
+      title: "Ngày tạo",
+      render: (text, record, index) => {
+        return <div>{dayjs(record.createdAt).format(dateFormat)}</div>;
+      },
+      key: "createdAt",
     },
     {
       title: "Hành động",
@@ -229,14 +194,25 @@ const UploadDocument = () => {
                   setIsModalInforOpen(true);
                   setDataPro(record);
                 }}
-              />
-              <UploadOutlined
+              /> 
+              {checkTab === "confirm" && (
+                <UploadOutlined
                 style={{ fontSize: "20px", color: "green" }}
                 onClick={() => {
                   setDataUser(record);
                   setIsModalOpen(true);
                 }}
               />
+              )}
+              {checkTab === "submitted" && (
+                <UploadOutlined
+                style={{ fontSize: "20px", color: "green" }}
+                onClick={() => {
+                  setDataUser(record);
+                  setIsModalContractOpen(true);
+                }}
+              />
+              )}
             </Space>
           </div>
         );
@@ -247,10 +223,15 @@ const UploadDocument = () => {
   const renderHeader = () => (
     <div>
       <Tabs
-        defaultActiveKey="notyet"
+        defaultActiveKey="confirm"
         items={items}
         onChange={(value) => {
-          setSortQuery(value);
+          setCheckTab(value);
+          if (value === "confirm") {
+            getTopicUpload();
+          } else {
+            getTopicUploadCont();
+          }
         }}
         style={{ overflowX: "auto", marginLeft: "30px" }}
       />
@@ -280,7 +261,9 @@ const UploadDocument = () => {
     }
     console.log("parms: ", pagination, filters, sorter, extra);
   };
-
+  useEffect(() => {
+    getTopicUpload();
+  }, []);
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
@@ -292,7 +275,7 @@ const UploadDocument = () => {
         }
         bordered={true}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={dataTopic}
         onChange={onChange}
         rowKey={"_id"}
         pagination={{
@@ -323,6 +306,12 @@ const UploadDocument = () => {
         data={dataPro}
         isModalOpen={isModalInforOpen}
         setIsModalOpen={setIsModalInforOpen}
+      />
+      <ModalUploadContract
+        data={data}
+        setDataUser={setDataUser}
+        isModalContractOpen={isModalContractOpen}
+        setIsModalContractOpen={setIsModalContractOpen}
       />
     </div>
   );

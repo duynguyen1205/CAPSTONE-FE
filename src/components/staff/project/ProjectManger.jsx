@@ -25,9 +25,10 @@ const dateFormat = "DD/MM/YYYY";
 import {
   getTopicForCouncil,
   getTopicForMemberApproval,
+  getTopicWaitingMember,
 } from "../../../services/api";
 const ProjectManager = () => {
-  //staff ID để text
+  //staff ID để test
   const staffId = "2D5E2220-EEEF-4FDC-8C98-1B5C5012319C";
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -155,7 +156,6 @@ const ProjectManager = () => {
       title: "ID",
       key: "index",
       dataIndex: "topicId",
-      // render: (text, record, index) => index + 1,
       width: "10%",
       hidden: true,
     },
@@ -259,6 +259,19 @@ const ProjectManager = () => {
       console.log("có lỗi tại getTopicForCouncil: " + error);
     }
   };
+
+  const getMemberApprovalTopic = async () => {
+    try {
+      const res = await getTopicWaitingMember({
+        staffId: staffId,
+      });
+      if (res && res?.data) {
+        setData(res.data);
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicForCouncil: " + error);
+    }
+  };
   useEffect(() => {
     getTopicMemberApproval();
   }, []);
@@ -273,6 +286,8 @@ const ProjectManager = () => {
             getTopicMemberApproval();
           } else if (value === "chohoidong") {
             getTopicCoucil();
+          } else if (value === "wait") {
+            getMemberApprovalTopic();
           }
         }}
         style={{ overflowX: "auto", marginLeft: "30px" }}
