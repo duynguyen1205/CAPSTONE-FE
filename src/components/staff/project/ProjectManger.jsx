@@ -34,7 +34,7 @@ const ProjectManager = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [checkTab, setCheckTab] = useState("notyet");
-  const [data, setData] = useState([]);
+  const [dataSource, setData] = useState([]);
   const [dataPro, setDataPro] = useState({});
   const [isModalInforOpen, setIsModalInforOpen] = useState(false);
   const navigate = useNavigate();
@@ -215,7 +215,9 @@ const ProjectManager = () => {
                       style={{ fontSize: "20px", color: "blue" }}
                       type="primary"
                       onClick={() => {
-                        navigate(`/staff/manager/add-council/${record.topicId}`);
+                        navigate(
+                          `/staff/manager/add-council/${record.topicId}`
+                        );
                       }}
                     >
                       Gửi hội đồng
@@ -230,13 +232,16 @@ const ProjectManager = () => {
       align: "center",
     },
   ];
+
   const getTopicMemberApproval = async () => {
     try {
       const res = await getTopicForMemberApproval({
         staffId: staffId,
       });
+      setIsLoading(true);
       if (res && res?.data) {
         setData(res.data);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log("có lỗi tại getTopicForMemberApproval: " + error);
@@ -308,7 +313,7 @@ const ProjectManager = () => {
         }
         bordered={true}
         columns={columns}
-        dataSource={data}
+        dataSource={dataSource}
         onChange={onChange}
         rowKey={"key"}
         pagination={{

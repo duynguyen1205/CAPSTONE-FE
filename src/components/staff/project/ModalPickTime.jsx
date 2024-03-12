@@ -29,11 +29,10 @@ const ModalPickTime = ({ visible, onCancel, dataUser }) => {
       memberReviewIds: userIDArray,
       numberOfDay: selectedTime,
     };
-    console.log(data);
   const result =  createMemberApproval(data)
     if(result) {
         message.success("Tạo thành viên phê duyệt thành công");
-        navigate("/staff/manager");
+        navigate("/staff");
     } 
     else {
         message.error("Lỗi tạo thành viên phê duyệt");

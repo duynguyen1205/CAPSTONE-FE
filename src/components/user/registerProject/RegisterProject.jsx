@@ -17,6 +17,8 @@ import {
   List,
 } from "antd";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import {
   InboxOutlined,
@@ -31,12 +33,13 @@ import {
   getAllUser,
   uploadFile,
 } from "../../../services/api";
+import "./register.scss";
 dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
 const { TextArea } = Input;
 //
 const { Dragger } = Upload;
-const today = dayjs().add(1, "day");
+const today = dayjs();
 const RegisterProject = () => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState([]);
@@ -56,7 +59,8 @@ const RegisterProject = () => {
         dataSource={addMember}
         renderItem={(addMember) => (
           <List.Item>
-            {addMember.email} - {addMember.role === "1" ? "Thành viên" : "Thư kí"}
+            {addMember.email} -{" "}
+            {addMember.role === "1" ? "Thành viên" : "Thư kí"}
           </List.Item>
         )}
       />
@@ -101,11 +105,27 @@ const RegisterProject = () => {
       }
     },
     onRemove: (file) => {
-      const index = newTopicFiles.indexOf(file);
-      const newFileList = newTopicFiles.slice();
-      newFileList.splice(index, 1);
-      console.log("checked ", newFileList);
-      setFileList(newFileList);
+      const newFileWithoutMatch = newTopicFiles
+        .map((item) => {
+          // Tách tên file và id từ topicFileName
+          const [fileName, fileId] = item.topicFileName.split("-");
+
+          const fileExtension = item.topicFileName.split(".").pop();
+          const newFileName = [fileName, fileExtension].join(".");
+          // Tạo một đối tượng mới với tên file đã được thay đổi
+          const newItem = {
+            ...item,
+            topicFileName: newFileName,
+          };
+
+          return newItem;
+        })
+        .filter((item) => item.topicFileName !== file.name);
+
+      const commonObjects = newTopicFiles.filter((obj1) =>
+      newFileWithoutMatch.some((obj2) => obj2.topicFileLink === obj1.topicFileLink)
+      );
+      setFileList(commonObjects);
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -142,8 +162,7 @@ const RegisterProject = () => {
       return newItem;
     });
     const creatorId = "a813f937-8c3a-40e8-b39e-7b1e0dd962f7"; // Ngô Minh G
-    const { categoryId, topicName, description, budget } = values;
-    console.log(newTopicFiles);
+    const { categoryId, topicName, description, budget, startTime } = values;
     const data = {
       categoryId: categoryId,
       creatorId: creatorId,
@@ -152,7 +171,9 @@ const RegisterProject = () => {
       budget: budget.toString(),
       memberList: newData,
       newTopicFiles: newTopicFiles,
+      startTime: dayjs(startTime).utc().format(),
     };
+
     try {
       const res = await createTopicAPI(data);
       if (res) {
@@ -288,7 +309,7 @@ const RegisterProject = () => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="time"
+              name="startTime"
               label="Thời gian bắt đầu dự kiến: "
               rules={[
                 {
@@ -296,11 +317,7 @@ const RegisterProject = () => {
                 },
               ]}
             >
-              <DatePicker
-                format={dateFormat}
-                defaultValue={today}
-                minDate={today}
-              />
+              <DatePicker format={dateFormat} minDate={today} />
             </Form.Item>
           </Col>
           <Col span={24}>
@@ -383,20 +400,14 @@ const RegisterProject = () => {
                 span: 12,
               }}
             >
-              <Upload.Dragger {...props} style={{ width: 300, height: 300 }}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Nhấp hoặc kéo tệp vào khu vực này để tải lên
-                </p>
-                <p className="ant-upload-hint">
-                  Hỗ trợ tải lên một lần hoặc hàng loạt. Vui lòng để tên file là
-                  tiếng việt không dấu
-                </p>
-              </Upload.Dragger>
+              <Upload
+                {...props}
+                listType="picture"
+                className="upload-list-inline"
+              >
+                <Button icon={<InboxOutlined />}>Tải tài liệu lên</Button>
+              </Upload>
             </Form.Item>
-
             <Form.Item>
               <ConfigProvider
                 theme={{

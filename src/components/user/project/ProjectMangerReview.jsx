@@ -33,7 +33,7 @@ const ProjectManagerUserReview = () => {
   const [dataPro, setDataPro] = useState({});
   const [status, setStatus] = useState(false);
   const [dataTopicForDean, setdataTopicForDean] = useState([]);
-  const [currentTab, setCurrentTab] = useState("");
+  const [currentTab, setCurrentTab] = useState("notpassyet");
   const items = [
     {
       key: "notpassyet",
@@ -203,30 +203,32 @@ const ProjectManagerUserReview = () => {
         };
         return (
           <div>
-            <Space size={"middle"} >
-              <InfoCircleOutlined
-                style={style1}
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setDataUser(record);
-                }}
-              />
-              {currentTab == "passed" && (
-                <>
-                  <p
-                    style={{
-                      backgroundColor: record.deanDecision ? "green" : "red",
-                      color: "white",
-                      display: "inline-block",
-                      padding: "5px 10px",
-                      borderRadius: "5px",
-                      marginTop: "8px",
-                    }}
-                  >
-                    {record.deanDecision ? "Đồng ý" : "Từ chối"}
-                  </p>
-                </>
-              )}
+            <Space size={"middle"}>
+                <InfoCircleOutlined
+                  style={style1}
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    setDataUser(record);
+                  }}
+                />
+              {currentTab == "passed" &&
+                dataTopicForDean &&
+                dataTopicForDean.length > 0 && (
+                  <>
+                    <p
+                      style={{
+                        backgroundColor: record.deanDecision ? "green" : "red",
+                        color: "white",
+                        display: "inline-block",
+                        padding: "5px 10px",
+                        borderRadius: "5px",
+                        marginTop: "8px",
+                      }}
+                    >
+                      {record.deanDecision ? "Đồng ý" : "Từ chối"}
+                    </p>
+                  </>
+                )}
 
               {currentTab == "notpassyet" && (
                 <>
@@ -250,7 +252,6 @@ const ProjectManagerUserReview = () => {
       align: "center",
     },
   ];
-
   const getTopicForDeanAPI = async () => {
     const res = await getTopicForDean({
       deanId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87", // Nguyen Van A
@@ -264,7 +265,6 @@ const ProjectManagerUserReview = () => {
       deanId: "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87", // Nguyen Van A
     });
     if (res && res?.data) {
-      console.log(res.data);
       setdataTopicForDean(res.data);
     }
   };
