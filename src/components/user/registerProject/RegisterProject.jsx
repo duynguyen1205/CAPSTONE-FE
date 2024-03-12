@@ -248,7 +248,7 @@ const RegisterProject = () => {
               ]}
               labelCol={{ span: 24 }}
             >
-              <InputNumber
+              <InputNumber className="text-align-input"
                 style={{ width: 230 }}
                 min={0}
                 formatter={(value) =>
