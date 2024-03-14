@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import {
-  Col,
   AutoComplete,
   Modal,
-  Row,
   Select,
   Button,
   Form,
@@ -11,8 +9,6 @@ import {
   Space,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-
-const { TextArea } = Input;
 const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
   const [form] = Form.useForm();
   const options = data.map((user) => ({
@@ -20,29 +16,6 @@ const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
     label: user.accountEmail, // Hiển thị tên người dùng
   }));
 
-  // reset form fields when modal is form, closed
-  // const useResetFormOnCloseModal = ({ form, open }) => {
-  //   const prevOpenRef = useRef();
-  //   useEffect(() => {
-  //     prevOpenRef.current = open;
-  //   }, [open]);
-  //   const prevOpen = prevOpenRef.current;
-  //   useEffect(() => {
-  //     if (!open && prevOpen) {
-  //       form.resetFields();
-  //     }
-  //   }, [form, prevOpen, open]);
-  // };
-  //// cách reset field nhanh hơn
-  //   useEffect(() =>{
-  // if(!open) return ;
-  // form.resetFields();
-  //   },[open,form]);
-
-  // useResetFormOnCloseModal({
-  //   form,
-  //   open,
-  // });
   const onOk = () => {
     form.submit();
   };
@@ -62,11 +35,16 @@ const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
       okText={"Xác nhận"}
       cancelText={"Thoát"}
       forceRender
-      maskClosable ={false}
+      maskClosable={false}
     >
       {" "}
       <Form form={form} onFinish={onFinish} autoComplete="off">
-        <Form.List name="item">
+        <Form.List
+          name="item"
+          initialValue={[
+            { email: "", role: "", taskDescription: "" },
+          ]}
+        >
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
@@ -89,9 +67,11 @@ const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
                     ]}
                   >
                     <AutoComplete options={options} filterOption={true}>
-                      <Input  style={{ width: 210 }} placeholder="Tìm nhà khoa học" />
+                      <Input
+                        style={{ width: 210 }}
+                        placeholder="Tìm nhà khoa học"
+                      />
                     </AutoComplete>
-                    {/* <Input placeholder="Email thành viên" /> */}
                   </Form.Item>
                   <Form.Item
                     {...restField}
@@ -99,7 +79,7 @@ const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
                     rules={[
                       {
                         required: true,
-                        message: "Vui lòng chọn role",
+                        message: "Vui lòng chọn vai trò",
                       },
                     ]}
                   >
@@ -117,6 +97,8 @@ const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
                           label: "Thư kí",
                         },
                       ]}
+                      placeholder="Vai trò"
+
                     />
                   </Form.Item>
                   <Form.Item
@@ -139,6 +121,7 @@ const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
               ))}
               <Form.Item>
                 <Button
+                disabled ={fields.length >= 10}
                   type="dashed"
                   onClick={() => add()}
                   block
@@ -146,6 +129,7 @@ const ModalAddMember = ({ open, onCancel, data, setAddMember }) => {
                 >
                   Thêm thành viên
                 </Button>
+                {fields.length >=10 ? "Tối đa 10 thành viên" : ""}
               </Form.Item>
             </>
           )}
