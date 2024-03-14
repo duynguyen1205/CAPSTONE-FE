@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import TextEditor from "./TextEditor";
 import {
   Button,
   Col,
@@ -86,17 +87,22 @@ const RegisterProject = () => {
       try {
         // Thực hiện tải lên file thông qua API của bạn
         const response = await uploadFile(file);
-        setFileList((fileList) => [
-          ...fileList,
-          {
-            topicFileName: response.data[0].fileName,
-            topicFileLink: response.data[0].fileLink,
-          },
-        ]);
-        // Gọi onSuccess để xác nhận rằng tải lên đã thành công
-        onSuccess(response, file);
-        // Hiển thị thông báo thành công
-        message.success(`${file.name} file uploaded successfully.`);
+
+        if (response.data[0].fileLink === undefined) {
+          onError(response, file);
+        } else {
+          setFileList((fileList) => [
+            ...fileList,
+            {
+              topicFileName: response.data[0].fileName,
+              topicFileLink: response.data[0].fileLink,
+            },
+          ]);
+          // Gọi onSuccess để xác nhận rằng tải lên đã thành công
+          onSuccess(response, file);
+          // Hiển thị thông báo thành công
+          message.success(`${file.name} file uploaded successfully.`);
+        }
       } catch (error) {
         // Gọi onError để thông báo lỗi nếu có vấn đề khi tải lên
         onError(error);
@@ -123,7 +129,9 @@ const RegisterProject = () => {
         .filter((item) => item.topicFileName !== file.name);
 
       const commonObjects = newTopicFiles.filter((obj1) =>
-      newFileWithoutMatch.some((obj2) => obj2.topicFileLink === obj1.topicFileLink)
+        newFileWithoutMatch.some(
+          (obj2) => obj2.topicFileLink === obj1.topicFileLink
+        )
       );
       setFileList(commonObjects);
     },
@@ -179,8 +187,8 @@ const RegisterProject = () => {
       if (res) {
         message.success("Tạo topic thành công");
         setFileList([]);
+        setAddMember([]);
         form.resetFields();
-        console.log("check kết quả trả về", res.message);
       }
     } catch (error) {
       console.error("lỗi thêm mới topic", error);
@@ -228,12 +236,7 @@ const RegisterProject = () => {
               ]}
               labelCol={{ span: 24 }}
             >
-              <TextArea
-                autoSize={{
-                  minRows: 4,
-                  maxRows: 22,
-                }}
-              />
+              <TextEditor />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -248,7 +251,8 @@ const RegisterProject = () => {
               ]}
               labelCol={{ span: 24 }}
             >
-              <InputNumber className="text-align-input"
+              <InputNumber
+                className="text-align-input"
                 style={{ width: 230 }}
                 min={0}
                 formatter={(value) =>
@@ -314,6 +318,7 @@ const RegisterProject = () => {
               rules={[
                 {
                   required: true,
+                  message: "Xin hãy chọn thời gian bắt đầu dự kiến",
                 },
               ]}
             >
