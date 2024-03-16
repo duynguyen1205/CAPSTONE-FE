@@ -23,20 +23,20 @@ import ModalPickTimeLeader from "./ModalPickTimeLeader";
 import { getAllUser } from "../../../services/api";
 import ModalPickTime from "./ModalPickTime";
 const AddMemberApprove = () => {
+  const searchInput = useRef(null);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedUser, setSelectedUser] = useState([]);
   const [user, setUser] = useState([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-  const [total, setTotal] = useState(0);
+  const [pageSize, setPageSize] = useState(7);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef(null);
   const [showFullData, setShowFullData] = useState({});
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [maxSelectedMembers, setMaxSelectedMembers] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const [newData, setNewData] = useState([]);
   const isRowDisabled = (record) => {
     // Check if the row should be disabled based on the number of selected members
     return (
@@ -228,15 +228,11 @@ const AddMemberApprove = () => {
   useEffect(() => {
     getUserAPI();
   }, []);
+  useEffect(() => {
+    if (current === 1 && newData.length > 1 ) setUser(newData);
+  }, [current]);
   const navigate = useNavigate();
 
-  // xử lý hội đồng sơ duyệt
-  const onSubmit = () => {
-    // Ví dụ: Hiển thị thông báo thành công
-    setModalVisible(true)
-  };
-  // xử lý hội đồng đánh giá
-  const onSubmitCouncil = () => {};
   // hide email and phone munber
   const maskEmail = (accountEmail) => {
     const [username, domain] = accountEmail.split("@");
@@ -267,10 +263,18 @@ const AddMemberApprove = () => {
       [key]: !prevState[key],
     }));
   };
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      // Update the selected row keys
-      setSelectedKeys(selectedRowKeys);
+      const newData = [...user];
+      // Move selected rows to the top
+      newData.sort((a, b) => {
+        if (selectedRowKeys.includes(a.key)) return -1;
+        if (selectedRowKeys.includes(b.key)) return 1;
+        return 0;
+      });
+      setNewData(newData);
+      setSelectedKeys(selectedRowKeys); // id của thành viên hội đồng
       setSelectedUser(selectedRows);
     },
     hideSelectAll: true,
@@ -313,11 +317,12 @@ const AddMemberApprove = () => {
             (setMaxSelectedMembers(7),
             (
               <Button
-                disabled={selectedUser.length < 2 || selectedUser.length % 2 === 0}
+                disabled={
+                  selectedUser.length < 2 || selectedUser.length % 2 === 0
+                }
                 shape="round"
                 type="primary"
                 onClick={() => {
-                  onSubmitCouncil();
                   setIsModalOpen(true);
                 }}
               >
@@ -328,10 +333,14 @@ const AddMemberApprove = () => {
             (setMaxSelectedMembers(5),
             (
               <Button
-                disabled={selectedUser.length < 2 || selectedUser.length % 2 === 0}
+                disabled={
+                  selectedUser.length < 2 || selectedUser.length % 2 === 0
+                }
                 shape="round"
                 type="primary"
-                onClick={onSubmit}
+                onClick={() => {
+                  setModalVisible(true);
+                }}
               >
                 Thêm thành viên phê duyệt
               </Button>
@@ -398,8 +407,7 @@ const AddMemberApprove = () => {
             current: current,
             pageSize: pageSize,
             showSizeChanger: true,
-            total: total,
-            pageSizeOptions: ["5", "10", "15"],
+            pageSizeOptions: ["7", "10", "15"],
             showTotal: (total, range) => {
               return (
                 <div>
