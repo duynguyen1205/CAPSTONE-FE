@@ -1,4 +1,5 @@
 import {
+  FileDoneOutlined,
   FileProtectOutlined,
   FileSearchOutlined,
   HomeOutlined,
@@ -37,6 +38,11 @@ const items = [
     label: <Link to="/user/manager-review">Đề tài thông qua</Link>,
     key: "manager-review",
     icon: <FileSearchOutlined />,
+  },
+  {
+    label: <Link to="/user/track">Theo dõi tiến độ</Link>,
+    key: "track",
+    icon: <FileDoneOutlined />,
   },
   {
     label: <Link to="/user/upload-document">Tải tài liệu lên </Link>,

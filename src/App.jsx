@@ -12,6 +12,7 @@ import LayoutUser from "./components/user/LayoutUser.jsx";
 import ProjectUser from "./pages/projectMangerUser/index.jsx";
 import UserPage from "./pages/user/index.jsx";
 import ProjectUserReview from "./pages/projectMangerUserReview/index.jsx";
+import TrackProject from "./components/user/project/TrackProject.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -91,6 +92,10 @@ function App() {
               element: <ProjectUser />,
             },
           ],
+        },
+        {
+          path: "track",
+          element: <TrackProject/>,
         },
         {
           path: "upload-document",
