@@ -1,6 +1,13 @@
-import { CaretRightOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  LoadingOutlined,
+  SmileOutlined,
+  SolutionOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import React, { useState } from "react";
-import { Collapse, theme, Spin } from "antd";
+import { Collapse, theme, Spin, Space, Steps } from "antd";
+import "./track.scss";
 const text = `
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
@@ -8,44 +15,21 @@ const text = `
 `;
 
 const TrackProject = () => {
-  const [currentStep, setCurrentStep] = useState(1); // Thay đổi giá trị này tùy thuộc vào tiến độ hiện tại
+  const [currentStep, setCurrentStep] = useState(1);
   const { token } = theme.useToken();
-  const panelStyle = {
-    marginBottom: 24,
-    background: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: "none",
+  const renderExtra = (step) => {
+    if (step === currentStep) {
+      return <Spin />;
+    } else if (step < currentStep) {
+      return <CheckOutlined style={{ color: "green" }} />;
+    }
+    return null;
   };
-  const getItems = (panelStyle) => [
-    {
-      key: "1",
-      label: "Đăng kí đề tài",
-      children: <p>{text}</p>,
-      style: panelStyle,
-      disabled: currentStep !== 1,
-    },
-    {
-      key: "2",
-      label: "Báo cáo giữa kì",
-      children: <p>{text}</p>,
-      style: panelStyle,
-      disabled: currentStep !== 2,
-    },
-    {
-      key: "3",
-      label: "Báo cáo cuối kì",
-      children: <p>{text}</p>,
-      style: panelStyle,
-      disabled: currentStep !== 3,
-    },
-    {
-      key: "4",
-      label: "Tổng kết",
-      children: <p>{text}</p>,
-      style: panelStyle,
-      disabled: currentStep !== 4,
-    },
-  ];
+  const isCollapseDisabled = (step) => {
+    if (step > currentStep) {
+      return "disabled";
+    } else return "header";
+  };
   return (
     <div>
       <h2
@@ -58,17 +42,81 @@ const TrackProject = () => {
       >
         Theo dõi tiến độ của đề tài
       </h2>
-      <Collapse
-        size="large"
-        defaultActiveKey={["1"]}
-        expandIcon={({ isActive }) => (
-          <CaretRightOutlined rotate={isActive ? 90 : 0} />
-        )}
-        style={{
-          background: token.colorBgContainer,
-        }}
-        items={getItems(panelStyle)}
-      />
+      <Space direction="vertical">
+        <Collapse
+          collapsible={isCollapseDisabled(1)}
+          items={[
+            {
+              key: "1",
+              label: "Đăng kí đề tài",
+              children: (
+                <>
+                <p>Trạng thái: cần tải lại tài liệu</p>
+                  <Steps
+                    size="small"
+                    items={[
+                      {
+                        title: "Login",
+                        status: "finish",
+                        icon: <UserOutlined />,
+                      },
+                      {
+                        title: "Verification",
+                        status: "finish",
+                        icon: <SolutionOutlined />,
+                      },
+                      {
+                        title: "Pay",
+                        status: "process",
+                        icon: <LoadingOutlined />,
+                      },
+                      {
+                        title: "Done",
+                        status: "wait",
+                        icon: <SmileOutlined />,
+                      },
+                    ]}
+                  />
+                </>
+              ),
+              extra: renderExtra(1),
+            },
+          ]}
+        />
+        <Collapse
+          collapsible={isCollapseDisabled(2)}
+          items={[
+            {
+              key: "2",
+              label: "Báo cáo giữa kì",
+              children: <p>{text}</p>,
+              extra: renderExtra(2),
+            },
+          ]}
+        />
+        <Collapse
+          collapsible={isCollapseDisabled(3)}
+          items={[
+            {
+              key: "3",
+              label: "Báo cáo cuối kì",
+              children: <p>{text}</p>,
+              extra: renderExtra(3),
+            },
+          ]}
+        />
+        <Collapse
+          collapsible={isCollapseDisabled(4)}
+          items={[
+            {
+              key: "4",
+              label: "Tổng kết",
+              children: <p>{text}</p>,
+              extra: renderExtra(4),
+            },
+          ]}
+        />
+      </Space>
     </div>
   );
 };
