@@ -25,7 +25,11 @@ const ModalReject = (props) => {
     createDeanMakeDecesion(param)
     .then((data) =>{
       message.success("Tạo đánh giá thành công")
-      props.setStatus(true)
+      if (props.status === true) {
+        props.setStatus(false);
+      } else {
+        props.setStatus(true)
+      }
       handleCancel()
     })
     .catch((error)=>{

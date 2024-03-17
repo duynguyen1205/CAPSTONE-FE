@@ -352,6 +352,7 @@ const ProjectManagerUserReview = () => {
         data={dataPro}
         isModalRejOpen={isModalRejOpen}
         setIsModalRejOpen={setIsModalRejOpen}
+        status = {status}
         setStatus={setStatus}
       />
     </div>

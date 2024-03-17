@@ -87,15 +87,14 @@ const RegisterProject = () => {
       try {
         // Thực hiện tải lên file thông qua API của bạn
         const response = await uploadFile(file);
-
         if (response.data[0].fileLink === undefined) {
           onError(response, file);
         } else {
           setFileList((fileList) => [
             ...fileList,
             {
-              topicFileName: response.data[0].fileName,
-              topicFileLink: response.data[0].fileLink,
+              fileName: response.data[0].fileName,
+              fileLink: response.data[0].fileLink,
             },
           ]);
           // Gọi onSuccess để xác nhận rằng tải lên đã thành công
@@ -184,14 +183,14 @@ const RegisterProject = () => {
 
     try {
       const res = await createTopicAPI(data);
-      if (res) {
+      if (res && res.isSuccess) {
         message.success("Tạo topic thành công");
         setFileList([]);
         setAddMember([]);
         form.resetFields();
       }
     } catch (error) {
-      console.error("lỗi thêm mới topic", error);
+      console.error("lỗi thêm mới topic", error.message);
     }
   };
   const checkUser = addMember.length > 0;
