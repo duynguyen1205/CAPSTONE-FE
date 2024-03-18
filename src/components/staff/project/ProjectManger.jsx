@@ -55,11 +55,6 @@ const ProjectManager = () => {
       label: `Chờ hội đồng`,
       children: <></>,
     },
-    {
-      key: "bituchoi",
-      label: `Bị từ chối`,
-      children: <></>,
-    },
   ];
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({

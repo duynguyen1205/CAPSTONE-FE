@@ -421,7 +421,7 @@ const RegisterProject = () => {
                 }}
               >
                 <Button
-                  style={{ marginLeft: "500px" }}
+                  style={{ margin: "500px" }}
                   type="primary"
                   htmlType="submit"
                 >
