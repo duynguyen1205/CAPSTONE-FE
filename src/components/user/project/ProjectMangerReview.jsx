@@ -186,24 +186,21 @@ const ProjectManagerUserReview = () => {
         const style1 = {
           color: "blue",
           fontSize: "1.5em",
-          margin: "0 20",
           cursor: "pointer",
         };
         const style2 = {
           color: "green",
           fontSize: "1.5em",
-          margin: "0 20",
+          margin: "0 20px",
           cursor: "pointer",
         };
         const style3 = {
           color: "red",
           fontSize: "1.5em",
-          margin: "0 20",
           cursor: "pointer",
         };
         return (
-          <div>
-            <Space size={"middle"}>
+          <div style={{ textAlign: "center" }}>
                 <InfoCircleOutlined
                   style={style1}
                   onClick={() => {
@@ -223,6 +220,7 @@ const ProjectManagerUserReview = () => {
                         padding: "5px 10px",
                         borderRadius: "5px",
                         marginTop: "8px",
+                        margin: "0 10px",
                       }}
                     >
                       {record.deanDecision ? "Đồng ý" : "Từ chối"}
@@ -245,7 +243,6 @@ const ProjectManagerUserReview = () => {
                   />
                 </>
               )}
-            </Space>
           </div>
         );
       },

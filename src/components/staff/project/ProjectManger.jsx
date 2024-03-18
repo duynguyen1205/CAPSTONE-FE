@@ -185,41 +185,45 @@ const ProjectManager = () => {
                 },
               }}
             >
-              <Space size={"middle"}>
-                <InfoCircleOutlined
-                  style={{ fontSize: "20px", color: "blue" }}
-                  onClick={() => {
-                    setIsModalInforOpen(true);
-                    setDataPro(record);
-                  }}
-                />{" "}
-                {checkTab === "notyet" && (
-                  <Tooltip placement="top" title={"Gửi sơ duyệt"}>
-                    <UserAddOutlined
-                      style={{ fontSize: "20px", color: "blue" }}
-                      type="primary"
-                      onClick={() => {
-                        navigate(`/staff/manager/add-member/${record.topicId}`);
-                      }}
-                    />
-                  </Tooltip>
-                )}
-                {checkTab === "chohoidong" && (
-                  <Tooltip placement="top" title={"Gửi hội đồng"}>
-                    <UsergroupAddOutlined
-                      style={{ fontSize: "20px", color: "blue" }}
-                      type="primary"
-                      onClick={() => {
-                        navigate(
-                          `/staff/manager/add-council/${record.topicId}`
-                        );
-                      }}
-                    >
-                      Gửi hội đồng
-                    </UsergroupAddOutlined>
-                  </Tooltip>
-                )}
-              </Space>
+              <InfoCircleOutlined
+                style={{ fontSize: "20px", color: "blue" }}
+                onClick={() => {
+                  setIsModalInforOpen(true);
+                  setDataPro(record);
+                }}
+              />{" "}
+              {checkTab === "notyet" && (
+                <Tooltip placement="top" title={"Gửi sơ duyệt"}>
+                  <UserAddOutlined
+                    style={{
+                      fontSize: "20px",
+                      color: "blue",
+                      margin: "0 10px",
+                    }}
+                    type="primary"
+                    onClick={() => {
+                      navigate(`/staff/manager/add-member/${record.topicId}`);
+                    }}
+                  />
+                </Tooltip>
+              )}
+              {checkTab === "chohoidong" && (
+                <Tooltip placement="top" title={"Gửi hội đồng"}>
+                  <UsergroupAddOutlined
+                    style={{
+                      fontSize: "20px",
+                      color: "blue",
+                      margin: "0 10px",
+                    }}
+                    type="primary"
+                    onClick={() => {
+                      navigate(`/staff/manager/add-council/${record.topicId}`);
+                    }}
+                  >
+                    Gửi hội đồng
+                  </UsergroupAddOutlined>
+                </Tooltip>
+              )}
             </ConfigProvider>
           </div>
         );

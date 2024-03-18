@@ -296,12 +296,12 @@ const AddMemberApprove = () => {
   };
   const renderFooter = () => (
     <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <Space>
         <Button
           shape="round"
           type="primary"
           danger
           onClick={() => navigate("/staff/manager")}
+          style={{margin: "0 10px"}}
         >
           Quay về
         </Button>
@@ -346,7 +346,6 @@ const AddMemberApprove = () => {
               </Button>
             ))}
         </ConfigProvider>
-      </Space>
     </div>
   );
   const listUser = (

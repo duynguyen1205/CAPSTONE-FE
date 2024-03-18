@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ModalInfor from "./ModalInfor";
 import "./table.scss";
 import ModalReject from "./ModalReject";
+// sơ duyệt
 import { getTopicReviewerAPI, createMemberDecision} from "../../../services/api";
 // import ModalInfor from "../../modalInfor.jsx";
 const ProjectManagerUser = () => {

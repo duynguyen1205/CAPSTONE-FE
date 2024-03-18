@@ -29,7 +29,7 @@ const UploadDocument = () => {
   const [isModalInforOpen, setIsModalInforOpen] = useState(false);
   const [isModalContractOpen, setIsModalContractOpen] = useState(false);
   const [dataTopic, setDataTopic] = useState([]);
-  const [checkTab, setCheckTab] = useState("confirm")
+  const [checkTab, setCheckTab] = useState("confirm");
   const staffId = "2D5E2220-EEEF-4FDC-8C98-1B5C5012319C";
   const getTopicUpload = async () => {
     try {
@@ -192,42 +192,48 @@ const UploadDocument = () => {
       render: (text, record, index) => {
         return (
           <div style={{ textAlign: "center" }}>
-            <Space size={"middle"}>
-              <InfoCircleOutlined
-                style={{ fontSize: "20px", color: "blue" }}
+            <InfoCircleOutlined
+              style={{ fontSize: "20px", color: "blue" }}
+              onClick={() => {
+                setIsModalInforOpen(true);
+                setDataPro(record);
+              }}
+            />
+            {checkTab === "confirm" && (
+              <UploadOutlined
+                style={{ fontSize: "20px", color: "green", margin: "0 10px" }}
                 onClick={() => {
-                  setIsModalInforOpen(true);
-                  setDataPro(record);
+                  setDataUser(record);
+                  setIsModalOpen(true);
                 }}
               />
-              {checkTab === "confirm" && (
-                <UploadOutlined
-                  style={{ fontSize: "20px", color: "green" }}
-                  onClick={() => {
-                    setDataUser(record);
-                    setIsModalOpen(true);
+            )}
+            {checkTab === "result" && (
+              <>
+                <p
+                  style={{
+                    backgroundColor: record.deanDecision ? "green" : "red",
+                    color: "white",
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    marginTop: "8px",
+                    margin: "0 10px",
                   }}
-                />
-              )}
-              {checkTab === "result" && (
-                <UploadOutlined
-                  style={{ fontSize: "20px", color: "green" }}
-                  onClick={() => {
-                    setDataUser(record);
-                    setIsModalOpen(true);
-                  }}
-                />
-              )}
-              {checkTab === "submitted" && (
-                <UploadOutlined
-                  style={{ fontSize: "20px", color: "green" }}
-                  onClick={() => {
-                    setDataUser(record);
-                    setIsModalContractOpen(true);
-                  }}
-                />
-              )}
-            </Space>
+                >
+                  {record.deanDecision ? "Đồng ý" : "Từ chối"}
+                </p>
+              </>
+            )}
+            {checkTab === "submitted" && (
+              <UploadOutlined
+                style={{ fontSize: "20px", color: "green", margin: "0 10px" }}
+                onClick={() => {
+                  setDataUser(record);
+                  setIsModalContractOpen(true);
+                }}
+              />
+            )}
           </div>
         );
       },
