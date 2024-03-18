@@ -1,4 +1,5 @@
 import {
+  FileDoneOutlined,
   HomeOutlined,
   UnorderedListOutlined,
   UploadOutlined,
@@ -34,6 +35,11 @@ const items = [
     label: <Link to="/staff/upload-document">Tải tài liệu lên </Link>,
     key: "upload-document",
     icon: <UploadOutlined />,
+  },
+  {
+    label: <Link to="/staff/track">Theo dõi tiến độ</Link>,
+    key: "track",
+    icon: <FileDoneOutlined  />,
   },
   {
     label: <Link to="/staff/profile">Hồ sơ cá nhân</Link>,

@@ -41,6 +41,7 @@ const ModalUploadContract = (props) => {
       topicId: data.topicId,
       newFiles: newTopicFiles,
     }
+    console.log(param)
     try {
       const res = await uploadContract(param);
       setIsSubmit(true);
@@ -69,6 +70,7 @@ const ModalUploadContract = (props) => {
               fileLink: response.data[0].fileLink,
             },
           ]);
+          console.log("resss",response);
         // Gọi onSuccess để xác nhận rằng tải lên đã thành công
         onSuccess(response, file);
         // Hiển thị thông báo thành công
