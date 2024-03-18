@@ -420,13 +420,16 @@ const RegisterProject = () => {
                   },
                 }}
               >
+                
                 <Button
-                  style={{ margin: "500px" }}
+                  style={{position: "absolute",left:"50%", top: "50%",transform: "translate(-50%,-50%)"}}
                   type="primary"
                   htmlType="submit"
                 >
                   Xác nhận
                 </Button>
+                
+                
               </ConfigProvider>
             </Form.Item>
           </Col>

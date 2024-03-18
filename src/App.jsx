@@ -99,6 +99,10 @@ function App() {
           ],
         },
         {
+          path: "coucil-infor",
+          element: <>Tải tài liệu</>,
+        },
+        {
           path: "track",
           element: <TrackProject/>,
         },

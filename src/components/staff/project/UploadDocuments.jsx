@@ -62,6 +62,11 @@ const UploadDocument = () => {
       children: <></>,
     },
     {
+      key: "result",
+      label: `Kết quả`,
+      children: <></>,
+    },
+    {
       key: "submitted",
       label: `Chờ hợp đồng`,
       children: <></>,
@@ -194,24 +199,33 @@ const UploadDocument = () => {
                   setIsModalInforOpen(true);
                   setDataPro(record);
                 }}
-              /> 
+              />
               {checkTab === "confirm" && (
                 <UploadOutlined
-                style={{ fontSize: "20px", color: "green" }}
-                onClick={() => {
-                  setDataUser(record);
-                  setIsModalOpen(true);
-                }}
-              />
+                  style={{ fontSize: "20px", color: "green" }}
+                  onClick={() => {
+                    setDataUser(record);
+                    setIsModalOpen(true);
+                  }}
+                />
+              )}
+              {checkTab === "result" && (
+                <UploadOutlined
+                  style={{ fontSize: "20px", color: "green" }}
+                  onClick={() => {
+                    setDataUser(record);
+                    setIsModalOpen(true);
+                  }}
+                />
               )}
               {checkTab === "submitted" && (
                 <UploadOutlined
-                style={{ fontSize: "20px", color: "green" }}
-                onClick={() => {
-                  setDataUser(record);
-                  setIsModalContractOpen(true);
-                }}
-              />
+                  style={{ fontSize: "20px", color: "green" }}
+                  onClick={() => {
+                    setDataUser(record);
+                    setIsModalContractOpen(true);
+                  }}
+                />
               )}
             </Space>
           </div>

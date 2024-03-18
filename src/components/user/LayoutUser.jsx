@@ -3,6 +3,7 @@ import {
   FileProtectOutlined,
   FileSearchOutlined,
   HomeOutlined,
+  ScheduleOutlined,
   UnorderedListOutlined,
   UploadOutlined,
   UserOutlined,
@@ -38,6 +39,11 @@ const items = [
     label: <Link to="/user/manager-review">Đề tài thông qua</Link>,
     key: "manager-review",
     icon: <FileSearchOutlined />,
+  },
+  {
+    label: <Link to="/user/coucil-infor">Thông tin cuộc họp</Link>,
+    key: "coucil-infor",
+    icon: <ScheduleOutlined /> ,
   },
   {
     label: <Link to="/user/track">Theo dõi tiến độ</Link>,
