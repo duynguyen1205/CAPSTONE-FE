@@ -15,6 +15,7 @@ import ProjectUserReview from "./pages/projectMangerUserReview/index.jsx";
 import TrackProject from "./components/user/project/TrackProject.jsx";
 import TrackProjectStaff from "./components/staff/project/TrackProject.jsx";
 import ProjectForTrack from "./components/user/project/ProjectForTrack.jsx";
+import InforMeeting from "./components/user/project/InforMeeting.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -101,7 +102,7 @@ function App() {
         },
         {
           path: "coucil-infor",
-          element: <>Tải tài liệu</>,
+          element: <InforMeeting/>,
         },
         {
           path: "track",

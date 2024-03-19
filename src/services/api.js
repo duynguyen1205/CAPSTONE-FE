@@ -130,3 +130,8 @@ export const trackReseach = (param) => {
 export const getTopicByUserId = (param) => {
   return axios.get(`api/topic/topic-for-user?${qs.stringify(param)}`)
 }
+
+//  get topic for council meeting
+export const getTopicForCouncilMeeting = (param) => {
+  return axios.get(`/api/topic/early-topic-waiting-council-meeting-for-council?${qs.stringify(param)}`);
+};
