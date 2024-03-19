@@ -16,6 +16,7 @@ import TrackProject from "./components/user/project/TrackProject.jsx";
 import TrackProjectStaff from "./components/staff/project/TrackProject.jsx";
 import ProjectForTrack from "./components/user/project/ProjectForTrack.jsx";
 import InforMeeting from "./components/user/project/InforMeeting.jsx";
+import ResubmitProject from "./components/user/project/ResubmitProject.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -120,7 +121,7 @@ function App() {
         },
         {
           path: "upload-document",
-          element: <>Tải tài liệu</>,
+          element: <ResubmitProject/>,
         },
         {
           path: "profile",
