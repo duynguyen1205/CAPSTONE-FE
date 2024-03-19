@@ -89,6 +89,15 @@ const ModalInfor = (props) => {
             </Col>
             <Col span={24}>
               <Form.Item
+                name="description"
+                label="Mô tả chi tiết"
+                labelCol={{ span: 24 }}
+              >
+                <Input disabled />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
                 name="document"
                 label="Tài liệu đính kèm"
                 labelCol={{ span: 24 }}

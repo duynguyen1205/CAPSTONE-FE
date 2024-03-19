@@ -1,6 +1,4 @@
 import {
-    CheckOutlined,
-    CloseOutlined,
     InfoCircleOutlined,
     SearchOutlined,
   } from "@ant-design/icons";
@@ -8,7 +6,6 @@ import {
   import React, { useEffect, useRef, useState } from "react";
   import Highlighter from "react-highlight-words";
   import "../../staff/project/project.scss";
-  import { useNavigate } from "react-router-dom";
   import ModalInfor from "./ModalInfor";
   import "./table.scss";
   import dayjs from "dayjs";
@@ -24,7 +21,6 @@ import { getTopicForCouncilMeeting } from "../../../services/api";
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [data, setDataUser] = useState({});
-    const [dataPro, setDataPro] = useState({});
     const [status, setStatus] = useState(false);
     const [dataTopicForCouncil, setdataTopicForCouncil] = useState([]);
     const getColumnSearchProps = (dataIndex) => ({
@@ -121,7 +117,7 @@ import { getTopicForCouncilMeeting } from "../../../services/api";
         title: "ID",
         key: "topicId",
         dataIndex: "code",
-        width: "10%",
+        width: "8%",
       },
       {
         title: "Tên Đề Tài",
@@ -141,13 +137,14 @@ import { getTopicForCouncilMeeting } from "../../../services/api";
           return <div>{dayjs(record.createdAt).format(dateFormat)}</div>;
         },
         key: "date",
+        width: "8%"
       },
       
       {
         title: "Note",
         dataIndex: "detail",
         key: "detail",
-        width: "30%"
+        width: "28%"
       },
       {
         title: "Chi tiết",
@@ -173,7 +170,6 @@ import { getTopicForCouncilMeeting } from "../../../services/api";
           };
           return (
             <div>
-              <Space size={"middle"}>
                   <InfoCircleOutlined
                     style={style1}
                     onClick={() => {
@@ -181,7 +177,6 @@ import { getTopicForCouncilMeeting } from "../../../services/api";
                       setDataUser(record);
                     }}
                   />
-              </Space>
             </div>
           );
         },
