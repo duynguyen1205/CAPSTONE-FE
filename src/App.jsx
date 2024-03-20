@@ -14,6 +14,7 @@ import UserPage from "./pages/user/index.jsx";
 import ProjectUserReview from "./pages/projectMangerUserReview/index.jsx";
 import TrackProject from "./components/user/project/TrackProject.jsx";
 import TrackProjectStaff from "./components/staff/project/TrackProject.jsx";
+import ProjectForTrack from "./components/user/project/ProjectForTrack.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -61,7 +62,7 @@ function App() {
         },
         {
           path: "track",
-          element: <TrackProjectStaff/>,
+          element: <TrackProjectStaff />,
         },
         {
           path: "profile",
@@ -104,7 +105,17 @@ function App() {
         },
         {
           path: "track",
-          element: <TrackProject/>,
+          element: <Outlet />,
+          children: [
+            {
+              index: true,
+              element: <ProjectForTrack />,
+            },
+            {
+              path: "track-topic/:projectId",
+              element: <TrackProject />,
+            },
+          ],
         },
         {
           path: "upload-document",

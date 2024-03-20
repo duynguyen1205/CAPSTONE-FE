@@ -1,60 +1,40 @@
 import {
   CheckOutlined,
   CloseOutlined,
+  FundViewOutlined,
   InfoCircleOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Button, ConfigProvider, Input, Space, Table, Tabs } from "antd";
+import { Button, Input, Space, Table, Tabs } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
-import ModalInfor from "./ModalInfor";
 import "./table.scss";
-import ModalReject from "./ModalReject";
-// sơ duyệt
-import { getTopicReviewerAPI, createMemberDecision} from "../../../services/api";
+import { getTopicByUserId } from "../../../services/api";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
 // import ModalInfor from "../../modalInfor.jsx";
-const ProjectManagerUser = () => {
+const ProjectForTrack = () => {
+  const navigate = useNavigate();
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalRejOpen, setIsModalRejOpen] = useState(false);
-  const [data, setDataUser] = useState({});
-  const [dataPro, setDataPro] = useState({});
-  const [topic, setTopic] = useState([]);
-  const [activeTab, setActiveTab] = useState("notyet");
-  const userId = "9645623f-dec0-4741-be28-0baeb1590c8c";
   const [dataTopicForMember, setdataTopicForMember] = useState([]);
-  useEffect(() => {
-    getTopicReviewer(userId);
-  }, [activeTab]);
-  const items = [
-    {
-      key: "notyet",
-      label: `Chưa duyệt`,
-      children: <></>,
-    },
-    {
-      key: "chohoidong",
-      label: `Đã duyệt`,
-      children: <></>,
-    },
-  ];
-  const getTopicReviewer = async () => {
-    const res = await getTopicReviewerAPI({
-      userId: "9645623f-dec0-4741-be28-0baeb1590c8c", // Nguyen Van A
-    });
-    if (res && res?.data) {
-      setdataTopicForMember(res.data);
-    }else{
-      console.log("ko load dc api");
+
+  const getProjectProcess = async () => {
+    try {
+      const res = await getTopicByUserId({
+        userId: "a813f937-8c3a-40e8-b39e-7b1e0dd962f7",
+      });
+      if (res && res.isSuccess) {
+        setdataTopicForMember(res.data);
+      }
+    } catch (error) {
+      console.log("====================================");
+      console.log("Có lỗi tại theo dõi đề tài: " + error.message);
+      console.log("====================================");
     }
   };
   const getColumnSearchProps = (dataIndex) => ({
@@ -146,26 +126,7 @@ const ProjectManagerUser = () => {
         text
       ),
   });
-  const handleOnClickApprove = (id) => {
-    const param = {
-      userId: "9645623f-EEB2-4E03-BC8D-1689D5FB3D87",
-      topicId: id,
-      decision: true,
-      rejectReason: null,
-    };
-    createMemberDecision(param)
-      .then((data) => {
-        if(activeTab === true) {
-          setStatus(false)
-        }
-        else {
-          setStatus(true)
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+
   const columns = [
     {
       title: "ID",
@@ -196,61 +157,27 @@ const ProjectManagerUser = () => {
     {
       title: "Hành động",
       render: (text, record, index) => {
-        const style1 = {
-          color: "blue",
-          fontSize: "1.5em",
-          cursor: "pointer",
-        };
         const style2 = {
           color: "green",
           fontSize: "1.5em",
-          margin: "0 10px",
-          cursor: "pointer",
-        };
-        const style3 = {
-          color: "red",
-          fontSize: "1.5em",
+          margin: "0 20",
           cursor: "pointer",
         };
         return (
-          <div style={{textAlign: "center"}}>
-              <InfoCircleOutlined
-                style={style1}
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setDataUser(record);
-                }}
-              />
-              <CheckOutlined
-                onClick={() => handleOnClickApprove(record.topicId)}
-                style={style2}
-              />
-              <CloseOutlined
-                style={style3}
-                onClick={() => {
-                  setDataPro(record);
-                  setIsModalRejOpen(true);
-                }}
-              />
+          <div>
+            <FundViewOutlined 
+               onClick={() => {
+                navigate(`/user/track/track-topic/${record.topicId}`);
+              }}
+              style={style2}
+            />
           </div>
         );
       },
       align: "center",
     },
   ];
-  
-  const renderHeader = () => (
-    <div>
-      <Tabs
-        defaultActiveKey="notyet"
-        items={items}
-        onChange={(value) => {
-          setActiveTab(value);
-        }}
-        style={{ overflowX: "auto", marginLeft: "30px" }}
-      />
-    </div>
-  );
+
   //search
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -274,6 +201,9 @@ const ProjectManagerUser = () => {
     }
     console.log("parms: ", pagination, filters, sorter, extra);
   };
+  useEffect(() => {
+    getProjectProcess();
+  }, []);
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
@@ -292,7 +222,6 @@ const ProjectManagerUser = () => {
           current: current,
           pageSize: pageSize,
           showSizeChanger: true,
-          total: total,
           pageSizeOptions: ["5", "10", "15"],
           showTotal: (total, range) => {
             return (
@@ -302,21 +231,9 @@ const ProjectManagerUser = () => {
             );
           },
         }}
-        title={renderHeader}
-        loading={isLoading}
-      />
-      <ModalInfor
-        data={data}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
-      <ModalReject
-        data={dataPro}
-        isModalRejOpen={isModalRejOpen}
-        setIsModalRejOpen={setIsModalRejOpen}
       />
     </div>
   );
 };
 
-export default ProjectManagerUser;
+export default ProjectForTrack;

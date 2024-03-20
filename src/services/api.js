@@ -122,7 +122,12 @@ export const uploadContract = (data) => {
 };
 
 // track topic history
-
 export const trackReseach = (param) => {
-  return axios.get(` api/topic/process?${qs.stringify(param)}`)
+  console.log(param);
+  return axios.get(`api/topic/process?${qs.stringify(param)}`)
+}
+
+// get topic by userId
+export const getTopicByUserId = (param) => {
+  return axios.get(`api/topic/topic-for-user?${qs.stringify(param)}`)
 }

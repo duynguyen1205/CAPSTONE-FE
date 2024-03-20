@@ -5,9 +5,10 @@ import {
   SolutionOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Collapse, Spin, Space, Steps } from "antd";
 import "./track.scss";
+
 const text = `
   A dog is a type of domesticated animal.
   Known for its loyalty and faithfulness,
@@ -29,6 +30,7 @@ const TrackProjectStaff = () => {
       return "disabled";
     } else return "header";
   };
+
   return (
     <div>
       <h2
