@@ -346,6 +346,7 @@ const ProjectManagerUserReview = () => {
         setIsModalOpen={setIsModalOpen}
       />
       <ModalReject
+        userId = "31C63D57-EEB2-4E03-BC8D-1689D5FB3D87"
         data={dataPro}
         isModalRejOpen={isModalRejOpen}
         setIsModalRejOpen={setIsModalRejOpen}

@@ -13,7 +13,11 @@ import ModalInfor from "./ModalInfor";
 import "./table.scss";
 import ModalReject from "./ModalReject";
 // sơ duyệt
-import { getTopicReviewerAPI, createMemberDecision} from "../../../services/api";
+import {
+  getTopicReviewerAPI,
+  createMemberDecision,
+  getReviewedByMember,
+} from "../../../services/api";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
@@ -22,19 +26,17 @@ const dateFormat = "DD/MM/YYYY";
 const ProjectManagerUser = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalRejOpen, setIsModalRejOpen] = useState(false);
   const [data, setDataUser] = useState({});
   const [dataPro, setDataPro] = useState({});
-  const [topic, setTopic] = useState([]);
+  const [status, setStatus] = useState(false);
   const [activeTab, setActiveTab] = useState("notyet");
-  const userId = "9645623f-dec0-4741-be28-0baeb1590c8c";
   const [dataTopicForMember, setdataTopicForMember] = useState([]);
   useEffect(() => {
-    getTopicReviewer(userId);
-  }, [activeTab]);
+    getTopicReviewer();
+  }, [status]);
   const items = [
     {
       key: "notyet",
@@ -42,19 +44,37 @@ const ProjectManagerUser = () => {
       children: <></>,
     },
     {
-      key: "chohoidong",
+      key: "done",
       label: `Đã duyệt`,
       children: <></>,
     },
   ];
   const getTopicReviewer = async () => {
-    const res = await getTopicReviewerAPI({
-      userId: "9645623f-dec0-4741-be28-0baeb1590c8c", // Nguyen Van A
-    });
-    if (res && res?.data) {
-      setdataTopicForMember(res.data);
-    }else{
-      console.log("ko load dc api");
+    try {
+      const res = await getTopicReviewerAPI({
+        memberId: "31c63d57-eeb2-4e03-bc8d-1689d5fb3d87", // Nguyen Van A
+      });
+      if (res && res?.data) {
+        setdataTopicForMember(res.data);
+      } else {
+        console.log("ko load dc api");
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicReviewe: ", error);
+    }
+  };
+  const getTopicHadReviwed = async () => {
+    try {
+      const res = await getReviewedByMember({
+        memberId: "31c63d57-eeb2-4e03-bc8d-1689d5fb3d87", // Nguyen Van A
+      });
+      if (res && res?.data) {
+        setdataTopicForMember(res.data);
+      } else {
+        console.log("ko load dc api");
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicReviewe: ", error);
     }
   };
   const getColumnSearchProps = (dataIndex) => ({
@@ -148,18 +168,17 @@ const ProjectManagerUser = () => {
   });
   const handleOnClickApprove = (id) => {
     const param = {
-      userId: "9645623f-EEB2-4E03-BC8D-1689D5FB3D87",
+      memberReviewId: "31c63d57-eeb2-4e03-bc8d-1689d5fb3d87",
       topicId: id,
-      decision: true,
-      rejectReason: null,
+      isApproved: true,
+      reason: null,
     };
     createMemberDecision(param)
       .then((data) => {
-        if(activeTab === true) {
-          setStatus(false)
-        }
-        else {
-          setStatus(true)
+        if (data) {
+          setStatus(true);
+        } else {
+          setStatus(false);
         }
       })
       .catch((error) => {
@@ -213,32 +232,54 @@ const ProjectManagerUser = () => {
           cursor: "pointer",
         };
         return (
-          <div style={{textAlign: "center"}}>
-              <InfoCircleOutlined
-                style={style1}
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setDataUser(record);
-                }}
-              />
-              <CheckOutlined
-                onClick={() => handleOnClickApprove(record.topicId)}
-                style={style2}
-              />
-              <CloseOutlined
-                style={style3}
-                onClick={() => {
-                  setDataPro(record);
-                  setIsModalRejOpen(true);
-                }}
-              />
+          <div style={{ textAlign: "center" }}>
+            <InfoCircleOutlined
+              style={style1}
+              onClick={() => {
+                setIsModalOpen(true);
+                setDataUser(record);
+              }}
+            />
+            {activeTab === "notyet" && (
+              <>
+                {" "}
+                <CheckOutlined
+                  onClick={() => handleOnClickApprove(record.topicId)}
+                  style={style2}
+                />
+                <CloseOutlined
+                  style={style3}
+                  onClick={() => {
+                    setDataPro(record);
+                    setIsModalRejOpen(true);
+                  }}
+                />
+              </>
+            )}
+            {activeTab === "done" && (
+              <>
+                <p
+                  style={{
+                    backgroundColor: record.memberDecision ? "green" : "red",
+                    color: "white",
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    marginTop: "8px",
+                    margin: "0 10px",
+                  }}
+                >
+                  {record.memberDecision ? "Đồng ý" : "Từ chối"}
+                </p>
+              </>
+            )}
           </div>
         );
       },
       align: "center",
     },
   ];
-  
+
   const renderHeader = () => (
     <div>
       <Tabs
@@ -246,6 +287,11 @@ const ProjectManagerUser = () => {
         items={items}
         onChange={(value) => {
           setActiveTab(value);
+          if (value === "done") {
+            getTopicHadReviwed();
+          } else {
+            getTopicReviewer();
+          }
         }}
         style={{ overflowX: "auto", marginLeft: "30px" }}
       />
@@ -292,7 +338,6 @@ const ProjectManagerUser = () => {
           current: current,
           pageSize: pageSize,
           showSizeChanger: true,
-          total: total,
           pageSizeOptions: ["5", "10", "15"],
           showTotal: (total, range) => {
             return (
@@ -311,9 +356,12 @@ const ProjectManagerUser = () => {
         setIsModalOpen={setIsModalOpen}
       />
       <ModalReject
+        userId="31C63D57-EEB2-4E03-BC8D-1689D5FB3D87"
         data={dataPro}
         isModalRejOpen={isModalRejOpen}
         setIsModalRejOpen={setIsModalRejOpen}
+        status={status}
+        setStatus={setStatus}
       />
     </div>
   );

@@ -86,6 +86,11 @@ export const getTopicForCouncil = (param) => {
   return axios.get(`api/topic/early-topic-waiting-council-formation?${qs.stringify(param)}`);
 };
 
+//get topic member has already reviewed
+export const getReviewedByMember = (param) => {
+  return axios.get(`api/topic/topic-reviewed-for-member?${qs.stringify(param)}`);
+};
+
 // create council
 export const councilConfig = (data) => {
   return axios.post("/api/review/config", data);

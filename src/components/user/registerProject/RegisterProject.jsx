@@ -35,6 +35,7 @@ import {
   uploadFile,
 } from "../../../services/api";
 import "./register.scss";
+import { useNavigate } from "react-router-dom";
 dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
 const today = dayjs();
@@ -44,6 +45,7 @@ const RegisterProject = () => {
   const [listUser, setListUser] = useState([]);
   const [newTopicFiles, setFileList] = useState([]);
   const [addMember, setAddMember] = useState([]);
+  const navigate = useNavigate();
   const showUserModal = () => {
     setOpen(true);
   };
@@ -86,10 +88,12 @@ const RegisterProject = () => {
         const response = await uploadFile(file);
         if (response.data[0].fileLink === null) {
           onError(response, file);
+          message.error(`${file.name} file uploaded unsuccessfully.`);
         } else {
           setFileList((fileList) => [
             ...fileList,
             {
+              uid: file.uid,
               fileName: response.data[0].fileName,
               fileLink: response.data[0].fileLink,
             },
@@ -107,31 +111,8 @@ const RegisterProject = () => {
       }
     },
     onRemove: (file) => {
-
-      const newFileWithoutMatch = newTopicFiles
-        .map((item) => {
-          // Tách tên file và id từ topicFileName
-          const [fileName, fileId] = item.fileName.split("-");
-
-          const fileExtension = item.fileName.split(".").pop();
-          const newFileName = [fileName, fileExtension].join(".");
-          // Tạo một đối tượng mới với tên file đã được thay đổi
-          const newItem = {
-            ...item,
-            fileName: newFileName,
-          };
-
-          return newItem;
-        })
-        .filter((item) => item.fileName !== file.name);
-      const commonObjects = newTopicFiles.filter((obj1) =>
-        newFileWithoutMatch.some(
-          (obj2) => obj2.fileLink === obj1.fileLink
-        )
-      );
-    
-      setFileList(commonObjects);
-      setFileList([])
+      const fileFilter = newTopicFiles.filter((x) => x.uid !== file.uid);
+      setFileList(fileFilter);
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -169,6 +150,7 @@ const RegisterProject = () => {
     });
     const creatorId = "a813f937-8c3a-40e8-b39e-7b1e0dd962f7"; // Ngô Minh G
     const { categoryId, topicName, description, budget, startTime } = values;
+    const updatedFileFilter = newTopicFiles.map(({ uid, ...rest }) => rest);
     const data = {
       categoryId: categoryId,
       creatorId: creatorId,
@@ -176,7 +158,7 @@ const RegisterProject = () => {
       description: description,
       budget: budget.toString(),
       memberList: newData,
-      newTopicFiles: newTopicFiles,
+      newTopicFiles: updatedFileFilter,
       startTime: dayjs(startTime).utc().format(),
     };
     try {
@@ -186,6 +168,7 @@ const RegisterProject = () => {
         setFileList([]);
         setAddMember([]);
         form.resetFields();
+        navigate("/user/track");
       }
     } catch (error) {
       console.error("lỗi thêm mới topic", error.message);
@@ -418,16 +401,18 @@ const RegisterProject = () => {
                   },
                 }}
               >
-                
                 <Button
-                  style={{position: "absolute",left:"50%", top: "50%",transform: "translate(-50%,-50%)"}}
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%,-50%)",
+                  }}
                   type="primary"
                   htmlType="submit"
                 >
                   Xác nhận
                 </Button>
-                
-                
               </ConfigProvider>
             </Form.Item>
           </Col>

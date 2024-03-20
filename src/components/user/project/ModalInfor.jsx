@@ -32,7 +32,7 @@ const ModalInfor = (props) => {
   // set up initial value for the form
   useEffect(() => {
     getTopicDetail();
-  }, [data]);
+  }, [isModalOpen === true]);
   return (
     <>
       <Modal

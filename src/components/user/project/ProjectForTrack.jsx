@@ -207,7 +207,7 @@ const ProjectForTrack = () => {
   return (
     <div>
       <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
-        Danh sách đề tài chờ sơ duyệt
+        Theo dõi tiến độ đề tài
       </h2>
       <Table
         rowClassName={(record, index) =>
