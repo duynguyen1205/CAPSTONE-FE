@@ -37,9 +37,6 @@ import {
 import "./register.scss";
 dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
-const { TextArea } = Input;
-//
-const { Dragger } = Upload;
 const today = dayjs();
 const RegisterProject = () => {
   const [open, setOpen] = useState(false);
@@ -87,7 +84,7 @@ const RegisterProject = () => {
       try {
         // Thực hiện tải lên file thông qua API của bạn
         const response = await uploadFile(file);
-        if (response.data[0].fileLink === undefined) {
+        if (response.data[0].fileLink === null) {
           onError(response, file);
         } else {
           setFileList((fileList) => [
@@ -110,29 +107,31 @@ const RegisterProject = () => {
       }
     },
     onRemove: (file) => {
+
       const newFileWithoutMatch = newTopicFiles
         .map((item) => {
           // Tách tên file và id từ topicFileName
-          const [fileName, fileId] = item.topicFileName.split("-");
+          const [fileName, fileId] = item.fileName.split("-");
 
-          const fileExtension = item.topicFileName.split(".").pop();
+          const fileExtension = item.fileName.split(".").pop();
           const newFileName = [fileName, fileExtension].join(".");
           // Tạo một đối tượng mới với tên file đã được thay đổi
           const newItem = {
             ...item,
-            topicFileName: newFileName,
+            fileName: newFileName,
           };
 
           return newItem;
         })
-        .filter((item) => item.topicFileName !== file.name);
-
+        .filter((item) => item.fileName !== file.name);
       const commonObjects = newTopicFiles.filter((obj1) =>
         newFileWithoutMatch.some(
-          (obj2) => obj2.topicFileLink === obj1.topicFileLink
+          (obj2) => obj2.fileLink === obj1.fileLink
         )
       );
+    
       setFileList(commonObjects);
+      setFileList([])
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -180,7 +179,6 @@ const RegisterProject = () => {
       newTopicFiles: newTopicFiles,
       startTime: dayjs(startTime).utc().format(),
     };
-
     try {
       const res = await createTopicAPI(data);
       if (res && res.isSuccess) {

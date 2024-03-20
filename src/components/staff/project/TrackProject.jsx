@@ -6,7 +6,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import React, { useState } from "react";
-import { Collapse, theme, Spin, Space, Steps } from "antd";
+import { Collapse, Spin, Space, Steps } from "antd";
 import "./track.scss";
 const text = `
   A dog is a type of domesticated animal.
@@ -16,7 +16,6 @@ const text = `
 
 const TrackProjectStaff = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const { token } = theme.useToken();
   const renderExtra = (step) => {
     if (step === currentStep) {
       return <Spin />;
@@ -51,9 +50,9 @@ const TrackProjectStaff = () => {
               label: "Đăng kí đề tài",
               children: (
                 <>
-                <h3>Tên đề tài : ABC</h3>
-                <h5>Ngày tạo : 25/3/2015</h5>
-                <p>Trạng thái : cần tải lại tài liệu</p>
+                  <h3>Tên đề tài : ABC</h3>
+                  <h5>Ngày tạo : 25/3/2015</h5>
+                  <p>Trạng thái : cần tải lại tài liệu</p>
                   <Steps
                     size="small"
                     items={[

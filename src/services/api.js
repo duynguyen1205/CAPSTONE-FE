@@ -67,7 +67,6 @@ export const createDeanMakeDecesion = (param) => {
 };
 
 //dean view history decision
-
 export const viewDeanDecesion = (param) => {
   return axios.get(`api/topic/topic-decided-by-dean?${qs.stringify(param)}`);
 };
@@ -77,18 +76,17 @@ export const getTopicForMemberApproval = (param) => {
   return axios.get(`/api/topic/pre-topic-waiting-review-formation?${qs.stringify(param)}`);
 };
 
-// get topic waiting for member approval
-export const getTopicForCouncil = (param) => {
-  return axios.get(`api/topic/early-topic-waiting-council-formation?${qs.stringify(param)}`);
-};
-
 // MemberReview topic 
 export const memberReviewAPI = (data) => {
   return axios.post("/api/memberreview/add-reviewer", data);
 }
 
-// create council
+// get topic waiting for member approval
+export const getTopicForCouncil = (param) => {
+  return axios.get(`api/topic/early-topic-waiting-council-formation?${qs.stringify(param)}`);
+};
 
+// create council
 export const councilConfig = (data) => {
   return axios.post("/api/review/config", data);
 };
@@ -105,7 +103,7 @@ export const getTopicWaitingMember = (param) => {
 
 //get topic waiting for upload resullts after meeting 
 export const getTopicUploadDoc = (param) => {
-  return axios.get(`api/topic/early-topic-waiting-council-metting?${qs.stringify(param)}`)
+  return axios.get(`api/topic/early-topic-waiting-council-meetting?${qs.stringify(param)}`)
 };
 
 //get topic waiting for upload contract 
@@ -119,6 +117,12 @@ export const uploadResult = (data) => {
   return axios.post("/api/review/update-meeting-result", data);
 };
 // upload contract contract for topic
-export const uploadContract= (data) => {
+export const uploadContract = (data) => {
   return axios.post("/api/contract/upload-early-contract", data);
 };
+
+// track topic history
+
+export const trackReseach = (param) => {
+  return axios.get(` api/topic/process?${qs.stringify(param)}`)
+}
