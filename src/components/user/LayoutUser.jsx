@@ -2,6 +2,7 @@ import {
   FileDoneOutlined,
   FileProtectOutlined,
   FileSearchOutlined,
+  FileSyncOutlined,
   HomeOutlined,
   ScheduleOutlined,
   UnorderedListOutlined,
@@ -51,9 +52,9 @@ const items = [
     icon: <FileDoneOutlined />,
   },
   {
-    label: <Link to="/user/upload-document">Tải tài liệu lên </Link>,
+    label: <Link to="/user/upload">Xem đề tài</Link>,
     key: "upload-document",
-    icon: <UploadOutlined />,
+    icon: <FileSyncOutlined />,
   },
   {
     label: <Link to="/user/profile">Hồ sơ cá nhân</Link>,

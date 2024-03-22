@@ -17,6 +17,7 @@ import TrackProjectStaff from "./components/staff/project/TrackProject.jsx";
 import ProjectForTrack from "./components/user/project/ProjectForTrack.jsx";
 import InforMeeting from "./components/user/project/InforMeeting.jsx";
 import ResubmitProject from "./components/user/project/ResubmitProject.jsx";
+import ProjectResubmit from "./components/user/project/ProjectResubmit.jsx";
 const Layout = () => {
   return <>Main Page</>;
 };
@@ -120,8 +121,18 @@ function App() {
           ],
         },
         {
-          path: "upload-document",
-          element: <ResubmitProject/>,
+          path: "upload",
+          element: <Outlet/>,
+          children: [
+            {
+              index: true,
+              element: <ProjectResubmit/>,
+            },
+            {
+              path: "upload-document/:projectId",
+              element: <ResubmitProject/>,
+            },
+          ],
         },
         {
           path: "profile",
