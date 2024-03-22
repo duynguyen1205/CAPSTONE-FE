@@ -13,7 +13,7 @@ import Highlighter from "react-highlight-words";
 import "../../staff/project/project.scss";
 import { useNavigate } from "react-router-dom";
 import "./table.scss";
-import { getTopicByUserId } from "../../../services/api";
+import {getTopicForCouncilMeeting } from "../../../services/api";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import ModalInfor from "./ModalInfor";
@@ -28,7 +28,8 @@ const ProjectResubmit = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("notyet");
-    const [dataTopicForMember, setdataTopicForMember] = useState([]);
+    const [status, setStatus] = useState(false);
+    const [dataTopicForCouncil, setdataTopicForCouncil] = useState([]);
     const items = [
         {
             key: "notyet",
@@ -41,20 +42,6 @@ const ProjectResubmit = () => {
             children: <></>,
         },
     ];
-    const getProjectResubmit = async () => {
-        try {
-            const res = await getTopicByUserId({
-                userId: "a813f937-8c3a-40e8-b39e-7b1e0dd962f7",
-            });
-            if (res && res.isSuccess) {
-                setdataTopicForMember(res.data);
-            }
-        } catch (error) {
-            console.log("====================================");
-            console.log("Có lỗi tại theo dõi đề tài: " + error.message);
-            console.log("====================================");
-        }
-    };
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
             setSelectedKeys,
@@ -228,16 +215,26 @@ const ProjectResubmit = () => {
                 onChange={(value) => {
                     setActiveTab(value);
                     if (value === "done") {
-                        getProjectResubmit();
+                        getTopicForCouncil();
                     } else {
-                        getProjectResubmit();
+                        getTopicForCouncil();
                     }
                 }}
                 style={{ overflowX: "auto", marginLeft: "30px" }}
             />
         </div>
     );
-
+    const getTopicForCouncil = async () => {
+        const res = await getTopicForCouncilMeeting({
+          councilId: "3d0b8c68-5e1f-46d6-96a4-71b0229a1e95", // Nguyen Thanh B-chairman
+        });
+        if (res && res?.data) {
+          setdataTopicForCouncil(res.data);
+        }
+      };
+      useEffect(() => {
+        getTopicForCouncil();
+      }, [status]);
     //search
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
@@ -261,9 +258,6 @@ const ProjectResubmit = () => {
         }
         console.log("parms: ", pagination, filters, sorter, extra);
     };
-    useEffect(() => {
-        getProjectResubmit();
-    }, []);
     return (
         <div>
             <h2 style={{ fontWeight: "bold", fontSize: "30px", color: "#303972" }}>
@@ -275,7 +269,7 @@ const ProjectResubmit = () => {
                 }
                 bordered={true}
                 columns={columns}
-                dataSource={dataTopicForMember}
+                dataSource={dataTopicForCouncil}
                 onChange={onChange}
                 rowKey={"_id"}
                 pagination={{
