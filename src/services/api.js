@@ -140,3 +140,15 @@ export const getTopicByUserId = (param) => {
 export const getTopicForCouncilMeeting = (param) => {
   return axios.get(`/api/topic/early-topic-waiting-council-meeting-for-council?${qs.stringify(param)}`);
 };
+
+// get topic waiting for resubmit
+export const getTopicWaitingResubmit = (param) => {
+  return axios.get(`api/topic/early-topic-waiting-resubmit?${qs.stringify(param)}`)
+};
+
+// reset deadline for resubmit
+
+export const setResubmitTime = (data) => {
+  return axios.post("api/review/edit-deadline-for-early-review", data);
+};
+

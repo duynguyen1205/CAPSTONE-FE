@@ -1,5 +1,6 @@
 import {
   CheckOutlined,
+  ClockCircleOutlined,
   InfoCircleOutlined,
   SearchOutlined,
   UploadOutlined,
@@ -13,6 +14,7 @@ import {
   Table,
   Tabs,
   Tag,
+  Tooltip,
   message,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,6 +25,7 @@ import ModalInfor from "../../user/project/ModalInfor";
 import {
   getTopicUploadContract,
   getTopicUploadDoc,
+  getTopicWaitingResubmit,
 } from "../../../services/api";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -66,6 +69,18 @@ const UploadDocument = () => {
       console.log("có lỗi tại getTopicUpload: ", error.message);
     }
   };
+  const getTopicUploadResubmit = async () => {
+    try {
+      const res = await getTopicWaitingResubmit({
+        staffId: staffId,
+      });
+      if (res && res.isSuccess) {
+        setDataTopic(res.data);
+      }
+    } catch (error) {
+      console.log("có lỗi tại getTopicUpload: ", error.message);
+    }
+  };
   const items = [
     {
       key: "confirm",
@@ -73,8 +88,8 @@ const UploadDocument = () => {
       children: <></>,
     },
     {
-      key: "result",
-      label: `Kết quả`,
+      key: "resubmit",
+      label: `Nộp lại`,
       children: <></>,
     },
     {
@@ -227,22 +242,12 @@ const UploadDocument = () => {
                 }}
               />
             )}
-            {checkTab === "result" && (
-              <>
-                <p
-                  style={{
-                    backgroundColor: record.deanDecision ? "green" : "red",
-                    color: "white",
-                    display: "inline-block",
-                    padding: "5px 10px",
-                    borderRadius: "5px",
-                    marginTop: "8px",
-                    margin: "0 10px",
-                  }}
-                >
-                  {record.deanDecision ? "Đồng ý" : "Từ chối"}
-                </p>
-              </>
+            {checkTab === "resubmit" && (
+              <Tooltip title="Làm mới thời hạn nộp ">
+                <ClockCircleOutlined
+                  style={{ fontSize: "20px", color: "red", margin: "0 10px" }}
+                />
+              </Tooltip>
             )}
             {checkTab === "submitted" && (
               <>
@@ -281,8 +286,10 @@ const UploadDocument = () => {
           setCheckTab(value);
           if (value === "confirm") {
             getTopicUpload();
-          } else {
+          } else if (value === "submitted") {
             getTopicUploadCont();
+          } else if (value === "resubmit") {
+            getTopicUploadResubmit();
           }
         }}
         style={{ overflowX: "auto", marginLeft: "30px" }}

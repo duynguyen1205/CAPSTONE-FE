@@ -63,18 +63,23 @@ const ModalUploadContract = (props) => {
       try {
         // Thực hiện tải lên file thông qua API của bạn
         const response = await uploadFile(file);
-        setFileList((fileList) => [
+        if (response.data[0].fileLink === null) {
+          onError(response, file);
+          message.error(`${file.name} file uploaded unsuccessfully.`);
+        } else {
+          setFileList((fileList) => [
             ...fileList,
             {
+              uid: file.uid,
               fileName: response.data[0].fileName,
               fileLink: response.data[0].fileLink,
             },
           ]);
-          console.log("resss",response);
-        // Gọi onSuccess để xác nhận rằng tải lên đã thành công
-        onSuccess(response, file);
-        // Hiển thị thông báo thành công
-        message.success(`${file.name} file uploaded successfully.`);
+          // Gọi onSuccess để xác nhận rằng tải lên đã thành công
+          onSuccess(response, file);
+          // Hiển thị thông báo thành công
+          message.success(`${file.name} file uploaded successfully.`);
+        }
       } catch (error) {
         // Gọi onError để thông báo lỗi nếu có vấn đề khi tải lên
         onError(error);
@@ -83,29 +88,8 @@ const ModalUploadContract = (props) => {
       }
     },
     onRemove: (file) => {
-      const newFileWithoutMatch = newTopicFiles
-        .map((item) => {
-          // Tách tên file và id từ topicFileName
-          const [fileName, fileId] = item.topicFileName.split("-");
-
-          const fileExtension = item.topicFileName.split(".").pop();
-          const newFileName = [fileName, fileExtension].join(".");
-          // Tạo một đối tượng mới với tên file đã được thay đổi
-          const newItem = {
-            ...item,
-            topicFileName: newFileName,
-          };
-
-          return newItem;
-        })
-        .filter((item) => item.topicFileName !== file.name);
-
-      const commonObjects = newTopicFiles.filter((obj1) =>
-        newFileWithoutMatch.some(
-          (obj2) => obj2.topicFileLink === obj1.topicFileLink
-        )
-      );
-      setFileList(commonObjects);
+      const fileFilter = newTopicFiles.filter((x) => x.uid !== file.uid);
+      setFileList(fileFilter);
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
