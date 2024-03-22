@@ -1,10 +1,15 @@
 import {
   CheckOutlined,
+  CloudUploadOutlined,
+  ContactsOutlined,
+  FileDoneOutlined,
   FileProtectOutlined,
   LoadingOutlined,
   SmileOutlined,
   SolutionOutlined,
+  UserAddOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { Collapse, theme, Spin, Space, Steps, Button, Popover } from "antd";
@@ -20,7 +25,7 @@ const text = `
 const TrackProject = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [dataProcess, setDataProcess] = useState([]);
+  const [dataProcess, setDataProcess] = useState({});
   const renderExtra = (step) => {
     if (step === currentStep) {
       return <Spin />;
@@ -75,45 +80,45 @@ const TrackProject = () => {
               label: "Đăng kí đề tài",
               children: (
                 <>
-                  <p>Trạng thái: cần tải lại tài liệu</p>
+                  <p>Trạng thái: </p>
                   <Steps
                     size="small"
                     labelPlacement="vertical"
                     items={[
                       {
                         title: "Nộp đề tài",
-                        status: "finish",
+                        status: "finished",
                         icon: <FileProtectOutlined />,
                       },
                       {
                         title: "Trưởng khoa duyệt",
-                        status: "process",
+                        status: dataProcess?.preliminaryReviewProcess?.waitingForDean === "Accept" ? "finished" : "wait",
                         icon: <SolutionOutlined />,
                       },
                       {
-                        title: "Staff tạo sơ duyệt",
-                        status: "process",
-                        icon: <LoadingOutlined />,
+                        title: "Staff thêm thành viên sơ duyệt",
+                        status: dataProcess?.preliminaryReviewProcess?.waitingForCouncilFormation === "Done" ? "finished" : "wait",
+                        icon: <UserAddOutlined />,
                       },
                       {
-                        title: "Hội đồng sơ duyệt đánh giá",
-                        status: "process",
-                        icon: <SmileOutlined />,
+                        title: "Thành viên sơ duyệt đánh giá",
+                        status: dataProcess?.preliminaryReviewProcess?.waitingForCouncilDecision === "Accept" ? "finished" : "wait",
+                        icon: <FileDoneOutlined />,
                       },
                       {
                         title: "Staff tạo hội đồng đánh giá",
-                        status: "process",
-                        icon: <UserOutlined />,
+                        status: dataProcess?.earlyTermReportProcess?.waitingForCouncilFormation === "Done" ? "finished" : "wait",
+                        icon: <UsergroupAddOutlined />,
                       },
                       {
                         title: "Staff tải lên quyết định",
-                        status: "process",
-                        icon: <SolutionOutlined />,
+                        status: dataProcess?.earlyTermReportProcess?.waitingForCouncilMeeting === "Accept" ? "finished" : "wait",
+                        icon: <CloudUploadOutlined />,
                       },
                       {
                         title: "Staff tải hợp đồng lên",
-                        status: "process",
-                        icon: <LoadingOutlined />,
+                        status:  dataProcess?.earlyTermReportProcess?.waitingForContractSigning === "Accept" ? "finished" : "wait",
+                        icon: <ContactsOutlined />,
                       },
                     ]}
                   />

@@ -1,9 +1,20 @@
 import {
+  CheckOutlined,
   InfoCircleOutlined,
   SearchOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Button, ConfigProvider, Input, Space, Table, Tabs, Tag } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  Input,
+  Popconfirm,
+  Space,
+  Table,
+  Tabs,
+  Tag,
+  message,
+} from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import "./project.scss";
@@ -161,6 +172,14 @@ const UploadDocument = () => {
         text
       ),
   });
+  const confirm = (e) => {
+    console.log(e);
+    message.success("Click on Yes");
+  };
+  const cancel = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   const columns = [
     {
       title: "Id",
@@ -226,13 +245,26 @@ const UploadDocument = () => {
               </>
             )}
             {checkTab === "submitted" && (
-              <UploadOutlined
-                style={{ fontSize: "20px", color: "green", margin: "0 10px" }}
-                onClick={() => {
-                  setDataUser(record);
-                  setIsModalContractOpen(true);
-                }}
-              />
+              <>
+                <UploadOutlined
+                  style={{ fontSize: "20px", color: "green", margin: "0 20px" }}
+                  onClick={() => {
+                    setDataUser(record);
+                    setIsModalContractOpen(true);
+                  }}
+                />
+                <Popconfirm
+                  placement="topRight"
+                  title="Xác nhận"
+                  description="Xác nhận kết thúc giai đoạn này?"
+                  onConfirm={confirm}
+                  onCancel={cancel}
+                  okText="Đồng ý"
+                  cancelText="Không"
+                >
+                  <CheckOutlined style={{ fontSize: "20px", color: "blue" }} />
+                </Popconfirm>
+              </>
             )}
           </div>
         );

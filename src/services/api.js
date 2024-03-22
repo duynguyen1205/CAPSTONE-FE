@@ -123,7 +123,6 @@ export const uploadContract = (data) => {
 
 // track topic history
 export const trackReseach = (param) => {
-  console.log(param);
   return axios.get(`api/topic/process?${qs.stringify(param)}`)
 }
 
